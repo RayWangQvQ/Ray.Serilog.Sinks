@@ -1,15 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+	<Import Project="..\..\common.props" />
+
 	<PropertyGroup>
 		<!--<TargetFrameworks>net7.0;net6.0</TargetFrameworks>-->
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<AssemblyName>Ray.Serilog.Sinks.MicrosoftTeamsBatched</AssemblyName>
-
 		<PackageId>Ray.Serilog.Sinks.MicrosoftTeamsBatched</PackageId>
-		<Version>0.0.2</Version>
-		<Authors>Ray</Authors>
-		<Company>Ray</Company>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+	<Import Project="..\..\common.props" />
+
 	<PropertyGroup>
 		<!--<TargetFrameworks>net7.0;net6.0</TargetFrameworks>-->
 		<TargetFramework>net6.0</TargetFramework>
 		<AssemblyName>Ray.Serilog.Sinks.DingTalkBatched</AssemblyName>
 		<PackageId>Ray.Serilog.Sinks.DingTalkBatched</PackageId>
-		<Version>0.0.2</Version>
-		<Authors>Ray</Authors>
-		<Company>Ray</Company>
 	</PropertyGroup>
 
 	<ItemGroup>

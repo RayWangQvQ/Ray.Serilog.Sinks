@@ -99,7 +99,7 @@ namespace Ray.Serilog.Sinks.Batched
 
         protected abstract PushService PushService { get; }
 
-        protected virtual void PushMessage(string message, string title = "Bili推送")
+        protected virtual void PushMessage(string message, string title = "推送")
         {
             //SelfLog.WriteLine($"Trying to send message: '{message}'.");
             var result = PushService.PushMessage(message, title);
@@ -177,7 +177,7 @@ namespace Ray.Serilog.Sinks.Batched
 
         protected virtual string GetPushTitle(LogEvent triggerLogEvent)
         {
-            var title = "Bili";
+            var title = "推送";
 
             var msg = RenderMessage(triggerLogEvent).Replace(Environment.NewLine, "");
             var list = msg.Split('·').ToList();
