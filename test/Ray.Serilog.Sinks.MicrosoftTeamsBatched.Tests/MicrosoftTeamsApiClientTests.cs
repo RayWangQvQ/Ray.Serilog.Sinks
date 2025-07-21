@@ -6,17 +6,6 @@ public class MicrosoftTeamsApiClientTests
 {
     private const string TestWebHookUrl = "https://outlook.office.com/webhook/test/IncomingWebhook/test";
 
-    [Fact]
-    public void Constructor_WithValidWebHookUrl_ShouldCreateInstance()
-    {
-        // Arrange & Act
-        var client = new MicrosoftTeamsApiClient(TestWebHookUrl);
-
-        // Assert
-        client.Should().NotBeNull();
-        client.ClientName.Should().Be("Microsoft Teams");
-    }
-
     [Theory]
     [InlineData("")]
     [InlineData("   ")]

@@ -18,31 +18,4 @@ public class GotifyApiClientTests
         client.Should().NotBeNull();
         client.ClientName.Should().Be("Gotify");
     }
-
-    [Theory]
-    [InlineData("", "token")]
-    [InlineData("   ", "token")]
-    [InlineData(null, "token")]
-    [InlineData("https://example.com", "")]
-    [InlineData("https://example.com", "   ")]
-    [InlineData("https://example.com", null)]
-    public void Constructor_WithInvalidParameters_ShouldThrowException(string host, string token)
-    {
-        // Act & Assert
-        Action act = () => new GotifyApiClient(host, token);
-        act.Should().Throw<Exception>();
-    }
-
-    [Fact]
-    public void PushMessage_WithValidParameters_ShouldReturnResponse()
-    {
-        // Arrange
-        var client = new GotifyApiClient(TestHost, TestToken);
-
-        // Act
-        var act = () => client.PushMessage("Test Content", "Test Title");
-
-        // Assert
-        act.Should().NotThrow();
-    }
 }

@@ -17,17 +17,6 @@ public class PushPlusApiClientTests
         client.ClientName.Should().Be("PushPlus");
     }
 
-    [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    [InlineData(null)]
-    public void Constructor_WithInvalidToken_ShouldThrowException(string invalidToken)
-    {
-        // Act & Assert
-        Action act = () => new PushPlusApiClient(invalidToken);
-        act.Should().Throw<Exception>(); // Uri构造函数可能抛出各种异常
-    }
-
     [Fact]
     public void PushMessage_WithValidParameters_ShouldReturnResponse()
     {

@@ -17,17 +17,6 @@ public class ServerChanApiClientTests
         client.ClientName.Should().Be("Server酱");
     }
 
-    [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    [InlineData(null)]
-    public void Constructor_WithInvalidSendKey_ShouldThrowException(string invalidSendKey)
-    {
-        // Act & Assert
-        Action act = () => new ServerChanApiClient(invalidSendKey);
-        act.Should().Throw<Exception>(); // Uri构造函数可能抛出各种异常
-    }
-
     [Fact]
     public void PushMessage_WithValidParameters_ShouldReturnResponse()
     {

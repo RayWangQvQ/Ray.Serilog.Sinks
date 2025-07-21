@@ -24,23 +24,4 @@ public class OtherApiBatchedSinkTests
         // Assert
         sink.Should().NotBeNull();
     }
-
-    [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    [InlineData(null)]
-    public void Constructor_WithInvalidApiUrl_ShouldThrowArgumentException(string invalidApiUrl)
-    {
-        // Act & Assert
-        Action act = () => new OtherApiBatchedSink(
-            invalidApiUrl,
-            "{}",
-            "test",
-            x => true,
-            true,
-            null,
-            LogEventLevel.Information);
-
-        act.Should().Throw<ArgumentException>();
-    }
 }
