@@ -13,10 +13,7 @@ namespace Ray.Serilog.Sinks.MicrosoftTeamsBatched
         private readonly HttpClient _httpClient = new HttpClient();
         private readonly string _token;
 
-        public GotifyApiClient(
-            string host,
-            string token
-            )
+        public GotifyApiClient(string host, string token)
         {
             _token = token;
             _apiUrl = new Uri($"{host}/message");
@@ -32,7 +29,7 @@ namespace Ray.Serilog.Sinks.MicrosoftTeamsBatched
             {
                 title = Title,
                 message = Msg,
-                extras = "{\"extras\":{\"client::display\":{\"contentType\":\"text/markdown\"}}}".JsonDeserialize<JObject>()
+                extras = "{\"extras\":{\"client::display\":{\"contentType\":\"text/markdown\"}}}".JsonDeserialize<JObject>(),
             }.ToJsonStr();
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");

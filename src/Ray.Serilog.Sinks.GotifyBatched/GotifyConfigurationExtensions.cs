@@ -1,9 +1,10 @@
 ﻿using Ray.Serilog.Sinks.Batched;
+using Ray.Serilog.Sinks.MicrosoftTeamsBatched;
 using Serilog;
 using Serilog.Configuration;
 using Serilog.Events;
 
-namespace Ray.Serilog.Sinks.MicrosoftTeamsBatched
+namespace Ray.Serilog.Sinks.GotifyBatched
 {
     public static class GotifyConfigurationExtensions
     {
@@ -23,7 +24,8 @@ namespace Ray.Serilog.Sinks.MicrosoftTeamsBatched
             if (outputTemplate == null)
                 throw new ArgumentNullException(nameof(outputTemplate));
 
-            if (containsTrigger.IsNullOrEmpty()) containsTrigger = Constants.DefaultContainsTrigger;
+            if (containsTrigger.IsNullOrEmpty())
+                containsTrigger = Constants.DefaultContainsTrigger;
             Predicate<LogEvent> predicate = x => x.MessageTemplate.Text.Contains(containsTrigger);
 
             return loggerSinkConfiguration.Sink(
@@ -34,8 +36,10 @@ namespace Ray.Serilog.Sinks.MicrosoftTeamsBatched
                     sendBatchesAsOneMessages,
                     outputTemplate,
                     formatProvider,
-                    restrictedToMinimumLevel),
-                restrictedToMinimumLevel);
+                    restrictedToMinimumLevel
+                ),
+                restrictedToMinimumLevel
+            );
         }
     }
 }

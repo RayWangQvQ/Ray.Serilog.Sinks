@@ -15,22 +15,19 @@ namespace Ray.Serilog.Sinks.WorkWeiXinBatched
             bool sendBatchesAsOneMessages,
             IFormatProvider formatProvider,
             LogEventLevel minimumLogEventLevel
-            ) : base(predicate, sendBatchesAsOneMessages, formatProvider, minimumLogEventLevel)
+        )
+            : base(predicate, sendBatchesAsOneMessages, formatProvider, minimumLogEventLevel)
         {
             _webHookUrl = webHookUrl;
         }
 
         public override void Emit(LogEvent logEvent)
         {
-            if (_webHookUrl.IsNullOrEmpty()) return;
+            if (_webHookUrl.IsNullOrEmpty())
+                return;
             base.Emit(logEvent);
         }
 
         protected override PushService PushService => new WorkWeiXinApiClient(_webHookUrl);
-
-        public override void Dispose()
-        {
-            //todo
-        }
     }
 }

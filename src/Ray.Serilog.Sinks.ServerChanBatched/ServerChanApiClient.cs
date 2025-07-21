@@ -32,18 +32,15 @@ namespace Ray.Serilog.Sinks.ServerChanBatched
 
         public override void BuildMsg()
         {
-            Msg += $"{Environment.NewLine}### 检测到当前为老版Server酱,即将失效,建议更换其他推送方式或更新至Server酱Turbo版";
+            Msg +=
+                $"{Environment.NewLine}### 检测到当前为老版Server酱,即将失效,建议更换其他推送方式或更新至Server酱Turbo版";
 
             base.BuildMsg();
         }
 
         public override HttpResponseMessage DoSend()
         {
-            var dic = new Dictionary<string, string>
-            {
-                {"text", Title},
-                {"desp", Msg}
-            };
+            var dic = new Dictionary<string, string> { { "text", Title }, { "desp", Msg } };
             var content = new FormUrlEncodedContent(dic);
             var response = _httpClient.PostAsync(_apiUrl, content).GetAwaiter().GetResult();
             return response;

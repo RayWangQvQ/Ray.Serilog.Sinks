@@ -1,0 +1,176 @@
+name: PR Check & Preview Package
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  NUGET_SOURCE: 'https://api.nuget.org/v3/index.json'
+  CSHARPIER_VERSION: '0.30.5'
+  COVERAGE_THRESHOLD: '70'
+
+jobs:
+  pr-check:
+    name: PR Quality Check
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Check build
+        run: |
+          echo "🔨 Building solution..."
+          dotnet build --configuration Release --no-restore
+          if [ $? -ne 0 ]; then
+            echo "❌ Build failed!"
+            exit 1
+          fi
+          echo "✅ Build passed!"
+
+      - name: Install CSharpier
+        run: dotnet tool install -g csharpier --version ${{ env.CSHARPIER_VERSION }}
+
+      - name: Check code formatting
+        run: |
+          echo "🎨 Checking code formatting with CSharpier..."
+          dotnet csharpier --check .
+          if [ $? -ne 0 ]; then
+            echo "❌ Code formatting check failed! Please run 'dotnet csharpier .' to fix formatting issues."
+            exit 1
+          fi
+          echo "✅ Code formatting check passed!"
+
+      - name: Generate coverage report and run tests
+        run: |
+          echo "📊 Generating coverage report using script..."
+          chmod +x ./scripts/generate-coverage.sh
+          ./scripts/generate-coverage.sh --threshold ${{ env.COVERAGE_THRESHOLD }}
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: CoverageReport/
+
+      - name: Read version from common.props
+        id: read-version
+        run: |
+          echo "📋 Reading version from common.props..."
+          version=$(grep -oP '(?<=<Version>)[^<]+' common.props)
+          preview_version="${version}-preview.$(date +%Y%m%d%H%M%S)"
+          echo "Base version: $version"
+          echo "Preview version: $preview_version"
+          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "preview_version=$preview_version" >> $GITHUB_OUTPUT
+
+      - name: Pack NuGet package
+        run: |
+          echo "📦 Creating preview NuGet package..."
+          mkdir -p ./bin/nupkgs
+          rm -rf ./bin/nupkgs/*
+
+          dotnet pack \
+            --configuration Release \
+            --no-build \
+            --output ./bin/nupkgs \
+            -p:PackageVersion=${{ steps.read-version.outputs.preview_version }} \
+            -p:VersionSuffix=preview.$(date +%Y%m%d%H%M%S)
+
+          echo "✅ Package created successfully!"
+          ls -la ./bin/nupkgs/
+
+      - name: Upload NuGet package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-package
+          path: ./bin/nupkgs/*.nupkg
+
+      - name: Push to NuGet (Preview)
+        if: success()
+        run: |
+          echo "🚀 Pushing preview package to NuGet..."
+
+          if [ -z "${{ secrets.NUGET_API_KEY }}" ]; then
+            echo "⚠️ NUGET_API_KEY secret not found. Skipping package push."
+            echo "Please add your NuGet API key as a repository secret named 'NUGET_API_KEY'"
+          else
+            for package in ./bin/nupkgs/*.nupkg; do
+              echo "Pushing $package..."
+              dotnet nuget push "$package" \
+                --api-key ${{ secrets.NUGET_API_KEY }} \
+                --source ${{ env.NUGET_SOURCE }} \
+                --skip-duplicate
+            done
+            echo "✅ Preview package pushed to NuGet successfully!"
+          fi
+
+      - name: Comment PR with results
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            let coverageInfo = '';
+            try {
+              const summaryPath = 'CoverageReport/Summary.json';
+              if (fs.existsSync(summaryPath)) {
+                const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
+                coverageInfo = `📊 **Test Coverage**: ${summary.summary.linecoverage}%`;
+              }
+            } catch (error) {
+              coverageInfo = '📊 **Test Coverage**: Unable to read coverage data';
+            }
+
+            const packageVersion = '${{ steps.read-version.outputs.preview_version }}';
+            const jobStatus = '${{ job.status }}';
+            const statusEmoji = jobStatus === 'success' ? '✅' : '❌';
+
+            const comment = `## ${statusEmoji} PR Check Results
+
+            **Status**: ${jobStatus.toUpperCase()}
+            **Preview Version**: \`${packageVersion}\`
+            ${coverageInfo}
+
+            ### Checks Performed:
+            - 🔨 **Build**: ${jobStatus === 'success' ? '✅ Passed' : '❌ Failed'}
+            - 🎨 **Code Formatting**: ${jobStatus === 'success' ? '✅ Passed' : '❌ Failed'}
+            - 🧪 **Unit Tests**: ${jobStatus === 'success' ? '✅ Passed' : '❌ Failed'}
+            - 📈 **Coverage (≥${{ env.COVERAGE_THRESHOLD }}%)**: ${jobStatus === 'success' ? '✅ Passed' : '❌ Failed'}
+            - 📦 **Package Creation**: ${jobStatus === 'success' ? '✅ Passed' : '❌ Failed'}
+            - 🚀 **Preview Publish**: ${jobStatus === 'success' ? '✅ Passed' : '❌ Failed'}
+
+            ${jobStatus === 'success' ?
+              '🎉 All checks passed! This PR is ready for review.' :
+              '🚨 Some checks failed. Please fix the issues before merging.'}
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

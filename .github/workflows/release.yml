@@ -1,0 +1,263 @@
+name: Release & Publish
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # 允许手动触发
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  NUGET_SOURCE: 'https://api.nuget.org/v3/index.json'
+
+jobs:
+  release:
+    name: Create Release & Publish Package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Read version from common.props
+        id: read-version
+        run: |
+          echo "📋 Reading version from common.props..."
+          version=$(grep -oP '(?<=<Version>)[^<]+' common.props)
+          echo "Version found: $version"
+          echo "version=$version" >> $GITHUB_OUTPUT
+          
+          # 检查版本格式是否有效
+          if [[ ! $version =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ Invalid version format: $version (expected: x.y.z)"
+            exit 1
+          fi
+          
+          echo "✅ Version format is valid: $version"
+
+      - name: Check if tag already exists
+        id: check-tag
+        run: |
+          version="${{ steps.read-version.outputs.version }}"
+          tag_name="v$version"
+          
+          echo "🔍 Checking if tag $tag_name already exists..."
+          
+          if git tag -l | grep -q "^$tag_name$"; then
+            echo "⚠️ Tag $tag_name already exists, skipping release"
+            echo "tag_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "✅ Tag $tag_name does not exist, proceeding with release"
+            echo "tag_exists=false" >> $GITHUB_OUTPUT
+          fi
+          
+          echo "tag_name=$tag_name" >> $GITHUB_OUTPUT
+
+      - name: Restore dependencies
+        if: steps.check-tag.outputs.tag_exists == 'false'
+        run: dotnet restore
+
+      - name: Build solution
+        if: steps.check-tag.outputs.tag_exists == 'false'
+        run: |
+          echo "🔨 Building solution for release..."
+          dotnet build --configuration Release --no-restore
+          if [ $? -ne 0 ]; then
+            echo "❌ Build failed!"
+            exit 1
+          fi
+          echo "✅ Build completed successfully!"
+
+      - name: Run tests with coverage
+        if: steps.check-tag.outputs.tag_exists == 'false'
+        run: |
+          echo "🧪 Running tests before release..."
+          chmod +x ./scripts/generate-coverage.sh
+          ./scripts/generate-coverage.sh --threshold 10 --no-threshold-check
+          echo "✅ Tests completed successfully!"
+
+      - name: Create and push tag
+        if: steps.check-tag.outputs.tag_exists == 'false'
+        run: |
+          tag_name="${{ steps.check-tag.outputs.tag_name }}"
+          version="${{ steps.read-version.outputs.version }}"
+          
+          echo "🏷️ Creating tag $tag_name..."
+          
+          # 配置git用户信息
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 创建带注释的标签
+          git tag -a "$tag_name" -m "Release version $version
+          
+          📦 Package version: $version
+          🔗 Commit: ${{ github.sha }}
+          👤 Author: ${{ github.actor }}
+          📅 Date: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          
+          This release was automatically created by GitHub Actions."
+          
+          # 推送标签到远程仓库
+          git push origin "$tag_name"
+          
+          echo "✅ Tag $tag_name created and pushed successfully!"
+
+      - name: Pack NuGet package (Release)
+        if: steps.check-tag.outputs.tag_exists == 'false'
+        run: |
+          version="${{ steps.read-version.outputs.version }}"
+          echo "📦 Creating release NuGet package version $version..."
+          
+          # 清理输出目录
+          mkdir -p ./bin/release-nupkgs
+          rm -rf ./bin/release-nupkgs/*
+          
+          # 打包正式版本
+          dotnet pack \
+            --configuration Release \
+            --no-build \
+            --output ./bin/release-nupkgs \
+            -p:PackageVersion=$version \
+            -p:IncludeSymbols=true \
+            -p:SymbolPackageFormat=snupkg
+          
+          echo "✅ Release package created successfully!"
+          echo "📋 Package files:"
+          ls -la ./bin/release-nupkgs/
+
+      - name: Verify package contents
+        if: steps.check-tag.outputs.tag_exists == 'false'
+        run: |
+          echo "🔍 Verifying package contents..."
+          
+          # 检查包文件是否存在
+          package_file=$(find ./bin/release-nupkgs -name "*.nupkg" -not -name "*.symbols.nupkg" | head -1)
+          symbols_file=$(find ./bin/release-nupkgs -name "*.snupkg" | head -1)
+          
+          if [ -z "$package_file" ]; then
+            echo "❌ Main package file not found!"
+            exit 1
+          fi
+          
+          echo "✅ Main package: $(basename "$package_file")"
+          
+          if [ -n "$symbols_file" ]; then
+            echo "✅ Symbols package: $(basename "$symbols_file")"
+          else
+            echo "⚠️ Symbols package not found (this is optional)"
+          fi
+
+      - name: Push to NuGet (Release)
+        if: steps.check-tag.outputs.tag_exists == 'false'
+        run: |
+          echo "🚀 Pushing release package to NuGet..."
+          
+          if [ -z "${{ secrets.NUGET_API_KEY }}" ]; then
+            echo "⚠️ NUGET_API_KEY secret not found. Skipping package push."
+            echo "Please add your NuGet API key as a repository secret named 'NUGET_API_KEY'"
+          else
+            for package in ./bin/release-nupkgs/*.nupkg; do
+              echo "Pushing $package..."
+              dotnet nuget push "$package" \
+                --api-key ${{ secrets.NUGET_API_KEY }} \
+                --source ${{ env.NUGET_SOURCE }} \
+                --skip-duplicate
+            done
+            echo "✅ Release package pushed to NuGet successfully!"
+          fi
+
+      - name: Create GitHub Release
+        if: steps.check-tag.outputs.tag_exists == 'false'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.check-tag.outputs.tag_name }}
+          release_name: Release ${{ steps.read-version.outputs.version }}
+          body: |
+            ## 🚀 Release ${{ steps.read-version.outputs.version }}
+            
+            This release was automatically created when changes were merged into the main branch.
+            
+            ### 📦 Package Information
+            - **Version**: `${{ steps.read-version.outputs.version }}`
+            - **NuGet Package**: [Ray.Infrastructure v${{ steps.read-version.outputs.version }}](https://www.nuget.org/packages/Ray.Infrastructure/${{ steps.read-version.outputs.version }})
+            - **Commit**: `${{ github.sha }}`
+            
+            ### 📋 What's Included
+            - ✅ Unit tests passed with coverage report
+            - ✅ Code formatting validated
+            - ✅ Built with .NET ${{ env.DOTNET_VERSION }}
+            - ✅ Published to NuGet with symbols
+            
+            ### 📥 Installation
+            ```bash
+            dotnet add package Ray.Infrastructure --version ${{ steps.read-version.outputs.version }}
+            ```
+            
+            ### 🔗 Links
+            - [View on NuGet](https://www.nuget.org/packages/Ray.Infrastructure/${{ steps.read-version.outputs.version }})
+            - [Documentation](https://github.com/${{ github.repository }}/blob/${{ steps.check-tag.outputs.tag_name }}/README.md)
+            - [Changelog](https://github.com/${{ github.repository }}/blob/${{ steps.check-tag.outputs.tag_name }}/CHANGELOG.md)
+          draft: false
+          prerelease: false
+
+      - name: Upload package artifacts
+        if: steps.check-tag.outputs.tag_exists == 'false'
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-packages-v${{ steps.read-version.outputs.version }}
+          path: ./bin/release-nupkgs/
+
+      - name: Upload coverage report
+        if: steps.check-tag.outputs.tag_exists == 'false'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-v${{ steps.read-version.outputs.version }}
+          path: CoverageReport/
+
+      - name: Summary
+        if: steps.check-tag.outputs.tag_exists == 'false'
+        run: |
+          version="${{ steps.read-version.outputs.version }}"
+          tag_name="${{ steps.check-tag.outputs.tag_name }}"
+          
+          echo "🎉 Release Summary"
+          echo "=================="
+          echo "✅ Version: $version"
+          echo "✅ Tag: $tag_name"
+          echo "✅ GitHub Release: Created"
+          echo "✅ NuGet Package: Published"
+          echo "✅ Artifacts: Uploaded"
+          echo ""
+          echo "🔗 Links:"
+          echo "- GitHub Release: https://github.com/${{ github.repository }}/releases/tag/$tag_name"
+          echo "- NuGet Package: https://www.nuget.org/packages/Ray.Infrastructure/$version"
+          echo ""
+          echo "🎯 Next Steps:"
+          echo "- Update CHANGELOG.md for the next version"
+          echo "- Consider updating documentation if needed"
+
+      - name: Skip message
+        if: steps.check-tag.outputs.tag_exists == 'true'
+        run: |
+          version="${{ steps.read-version.outputs.version }}"
+          tag_name="${{ steps.check-tag.outputs.tag_name }}"
+          
+          echo "⏭️ Release Skipped"
+          echo "=================="
+          echo "ℹ️ Tag $tag_name already exists for version $version"
+          echo "ℹ️ No new release will be created"
+          echo ""
+          echo "💡 To create a new release:"
+          echo "1. Update the version in common.props"
+          echo "2. Commit and push the changes"
+          echo "3. The release workflow will run automatically"

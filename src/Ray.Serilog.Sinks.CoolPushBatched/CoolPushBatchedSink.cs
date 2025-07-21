@@ -14,22 +14,19 @@ namespace Ray.Serilog.Sinks.CoolPushBatched
             bool sendBatchesAsOneMessages,
             IFormatProvider formatProvider,
             LogEventLevel minimumLogEventLevel
-            ) : base(predicate, sendBatchesAsOneMessages, formatProvider, minimumLogEventLevel)
+        )
+            : base(predicate, sendBatchesAsOneMessages, formatProvider, minimumLogEventLevel)
         {
             _sKey = sKey;
         }
 
         public override void Emit(LogEvent logEvent)
         {
-            if (_sKey.IsNullOrEmpty()) return;
+            if (_sKey.IsNullOrEmpty())
+                return;
             base.Emit(logEvent);
         }
 
         protected override PushService PushService => new CoolPushApiClient(_sKey);
-
-        public override void Dispose()
-        {
-            //todo
-        }
     }
 }

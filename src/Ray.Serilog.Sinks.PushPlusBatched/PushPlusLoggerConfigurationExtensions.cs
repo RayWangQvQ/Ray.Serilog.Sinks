@@ -26,7 +26,8 @@ namespace Ray.Serilog.Sinks.PushPlusBatched
             if (outputTemplate == null)
                 throw new ArgumentNullException(nameof(outputTemplate));
 
-            if (containsTrigger.IsNullOrEmpty()) containsTrigger = Constants.DefaultContainsTrigger;
+            if (containsTrigger.IsNullOrEmpty())
+                containsTrigger = Constants.DefaultContainsTrigger;
             Predicate<LogEvent> predicate = x => x.MessageTemplate.Text.Contains(containsTrigger);
 
             return loggerSinkConfiguration.Sink(
@@ -39,8 +40,10 @@ namespace Ray.Serilog.Sinks.PushPlusBatched
                     sendBatchesAsOneMessages,
                     outputTemplate,
                     formatProvider,
-                    restrictedToMinimumLevel),
-                restrictedToMinimumLevel);
+                    restrictedToMinimumLevel
+                ),
+                restrictedToMinimumLevel
+            );
         }
     }
 }

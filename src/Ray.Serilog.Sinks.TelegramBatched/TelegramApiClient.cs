@@ -32,7 +32,12 @@ namespace Ray.Serilog.Sinks.TelegramBatched
         /// <param name="botToken">The Telegram bot token.</param>
         /// <param name="timeoutSeconds">The timeout seconds.</param>
         /// <exception cref="ArgumentException">Thrown if the bot token is null or empty.</exception>
-        public TelegramApiClient(string botToken, string chatId, string proxy="", int timeoutSeconds = 10)
+        public TelegramApiClient(
+            string botToken,
+            string chatId,
+            string proxy = "",
+            int timeoutSeconds = 10
+        )
         {
             if (string.IsNullOrWhiteSpace(botToken))
             {
@@ -70,10 +75,13 @@ namespace Ray.Serilog.Sinks.TelegramBatched
                 chat_id = _chatId,
                 text = Msg,
                 parse_mode = TeleMsgType.HTML.ToString(),
-                disable_web_page_preview = true
+                disable_web_page_preview = true,
             }.ToJsonStr();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = this._httpClient.PostAsync(this._apiUrl, content).GetAwaiter().GetResult();
+            var response = this
+                ._httpClient.PostAsync(this._apiUrl, content)
+                .GetAwaiter()
+                .GetResult();
             return response;
         }
 
@@ -101,7 +109,7 @@ namespace Ray.Serilog.Sinks.TelegramBatched
 
                 var credentials = new NetworkCredential(proxyUser, proxyPass);
 
-                webProxy = new WebProxy(address, true,null, credentials);
+                webProxy = new WebProxy(address, true, null, credentials);
             }
             else
             {

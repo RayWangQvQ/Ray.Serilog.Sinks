@@ -20,7 +20,10 @@ namespace Ray.Serilog.Sinks.Batched
         {
             if (queueLimit.HasValue && queueLimit <= 0)
             {
-                throw new ArgumentOutOfRangeException("queueLimit", "Queue limit must be positive, or `null` to indicate unbounded.");
+                throw new ArgumentOutOfRangeException(
+                    "queueLimit",
+                    "Queue limit must be positive, or `null` to indicate unbounded."
+                );
             }
 
             _queueLimit = (queueLimit ?? (-1));
@@ -34,9 +37,7 @@ namespace Ray.Serilog.Sinks.Batched
             }
 
             bool result = false;
-            try
-            {
-            }
+            try { }
             finally
             {
                 if (_queue.TryDequeue(out item))
@@ -58,9 +59,7 @@ namespace Ray.Serilog.Sinks.Batched
             }
 
             bool result = true;
-            try
-            {
-            }
+            try { }
             finally
             {
                 if (Interlocked.Increment(ref _counter) <= _queueLimit)

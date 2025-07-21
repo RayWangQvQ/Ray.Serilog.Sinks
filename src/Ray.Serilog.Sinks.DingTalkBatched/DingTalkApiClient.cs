@@ -47,17 +47,14 @@ namespace Ray.Serilog.Sinks.DingTalkBatched
             var json = new
             {
                 msgtype = DingMsgType.markdown.ToString(),
-                markdown = new
-                {
-                    title = Title,
-                    text = Msg
-                }
+                markdown = new { title = Title, text = Msg },
             }.ToJsonStr();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = _httpClient.PostAsync(_apiUrl, content).GetAwaiter().GetResult();
             return response;
         }
+
         // hmac256加密并返回base64
         public static string ToBase64hmac(string strText, string strKey)
         {
@@ -65,6 +62,7 @@ namespace Ray.Serilog.Sinks.DingTalkBatched
             byte[] byteText = myHMACSHA256.ComputeHash(Encoding.UTF8.GetBytes(strText));
             return System.Convert.ToBase64String(byteText);
         }
+
         // 推送钉钉消息url加上签名
         public static string ToGetSignUrl(string webHookUrl)
         {
@@ -92,6 +90,6 @@ namespace Ray.Serilog.Sinks.DingTalkBatched
         markdown,
         actionCard,
         feedCard,
-        empty
+        empty,
     }
 }

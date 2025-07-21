@@ -21,8 +21,14 @@ namespace Ray.Serilog.Sinks.PushPlusBatched
             string outputTemplate,
             IFormatProvider formatProvider,
             LogEventLevel minimumLogEventLevel
+        )
+            : base(
+                predicate,
+                sendBatchesAsOneMessages,
+                outputTemplate,
+                formatProvider,
+                minimumLogEventLevel
             )
-            : base(predicate, sendBatchesAsOneMessages, outputTemplate, formatProvider, minimumLogEventLevel)
         {
             _token = token;
             _topic = topic;
@@ -32,19 +38,12 @@ namespace Ray.Serilog.Sinks.PushPlusBatched
 
         public override void Emit(LogEvent logEvent)
         {
-            if (_token.IsNullOrEmpty()) return;
+            if (_token.IsNullOrEmpty())
+                return;
             base.Emit(logEvent);
         }
 
-        protected override PushService PushService => new PushPlusApiClient(
-            _token,
-            _topic,
-            channel: _channel,
-            webhook: _webhook);
-
-        public override void Dispose()
-        {
-            //todo
-        }
+        protected override PushService PushService =>
+            new PushPlusApiClient(_token, _topic, channel: _channel, webhook: _webhook);
     }
 }
