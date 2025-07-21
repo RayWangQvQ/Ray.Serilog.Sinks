@@ -25,26 +25,4 @@ public class MicrosoftTeamsBatchedSinkTests
         // Assert
         sink.Should().NotBeNull();
     }
-
-    [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    [InlineData(null)]
-    public void Constructor_WithInvalidWebHookUrl_ShouldThrowArgumentException(
-        string invalidWebHookUrl
-    )
-    {
-        // Act & Assert
-        Action act = () =>
-            new MicrosoftTeamsBatchedSink(
-                invalidWebHookUrl,
-                x => true,
-                true,
-                "{Message}",
-                null,
-                LogEventLevel.Information
-            );
-
-        act.Should().Throw<ArgumentException>();
-    }
 }

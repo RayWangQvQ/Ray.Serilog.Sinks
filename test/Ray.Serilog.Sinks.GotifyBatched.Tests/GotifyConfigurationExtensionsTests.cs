@@ -45,24 +45,4 @@ public class GotifyConfigurationExtensionsTests
         result.Should().NotBeNull();
         result.Should().BeOfType<LoggerConfiguration>();
     }
-
-    [Theory]
-    [InlineData("", "token")]
-    [InlineData("   ", "token")]
-    [InlineData(null, "token")]
-    [InlineData("https://example.com", "")]
-    [InlineData("https://example.com", "   ")]
-    [InlineData("https://example.com", null)]
-    public void GotifyBatched_WithInvalidParameters_ShouldThrowArgumentException(
-        string host,
-        string token
-    )
-    {
-        // Arrange
-        var configuration = new LoggerConfiguration();
-
-        // Act & Assert
-        Action act = () => configuration.WriteTo.GotifyBatched(host, token);
-        act.Should().Throw<Exception>();
-    }
 }

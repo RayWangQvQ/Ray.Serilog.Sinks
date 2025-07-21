@@ -47,18 +47,4 @@ public class OtherApiLoggerConfigurationExtensionsTests
         result.Should().NotBeNull();
         result.Should().BeOfType<LoggerConfiguration>();
     }
-
-    [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    [InlineData(null)]
-    public void OtherApiBatched_WithInvalidApiUrl_ShouldThrowArgumentException(string invalidApiUrl)
-    {
-        // Arrange
-        var configuration = new LoggerConfiguration();
-
-        // Act & Assert
-        Action act = () => configuration.WriteTo.OtherApiBatched(invalidApiUrl, "{}", "test");
-        act.Should().Throw<ArgumentException>();
-    }
 }

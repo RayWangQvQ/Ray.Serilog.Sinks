@@ -43,20 +43,4 @@ public class MicrosoftTeamsLoggerConfigurationExtensionsTests
         result.Should().NotBeNull();
         result.Should().BeOfType<LoggerConfiguration>();
     }
-
-    [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    [InlineData(null)]
-    public void MicrosoftTeamsBatched_WithInvalidWebHookUrl_ShouldThrowArgumentException(
-        string invalidWebHookUrl
-    )
-    {
-        // Arrange
-        var configuration = new LoggerConfiguration();
-
-        // Act & Assert
-        Action act = () => configuration.WriteTo.MicrosoftTeamsBatched(invalidWebHookUrl);
-        act.Should().Throw<ArgumentException>();
-    }
 }

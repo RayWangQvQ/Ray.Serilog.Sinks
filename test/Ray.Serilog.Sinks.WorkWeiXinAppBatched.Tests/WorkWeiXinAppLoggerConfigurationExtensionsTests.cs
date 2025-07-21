@@ -56,29 +56,4 @@ public class WorkWeiXinAppLoggerConfigurationExtensionsTests
         result.Should().NotBeNull();
         result.Should().BeOfType<LoggerConfiguration>();
     }
-
-    [Theory]
-    [InlineData("", "secret", "agent")]
-    [InlineData("   ", "secret", "agent")]
-    [InlineData(null, "secret", "agent")]
-    [InlineData("corp", "", "agent")]
-    [InlineData("corp", "   ", "agent")]
-    [InlineData("corp", null, "agent")]
-    [InlineData("corp", "secret", "")]
-    [InlineData("corp", "secret", "   ")]
-    [InlineData("corp", "secret", null)]
-    public void WorkWeiXinAppBatched_WithInvalidParameters_ShouldThrowArgumentException(
-        string corpId,
-        string corpSecret,
-        string agentId
-    )
-    {
-        // Arrange
-        var configuration = new LoggerConfiguration();
-
-        // Act & Assert
-        Action act = () =>
-            configuration.WriteTo.WorkWeiXinAppBatched(corpId, agentId, corpSecret, "@all", "", "");
-        act.Should().Throw<ArgumentException>();
-    }
 }

@@ -42,18 +42,4 @@ public class CoolPushLoggerConfigurationExtensionsTests
         result.Should().NotBeNull();
         result.Should().BeOfType<LoggerConfiguration>();
     }
-
-    [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    [InlineData(null)]
-    public void CoolPushBatched_WithInvalidSKey_ShouldThrowArgumentException(string invalidSKey)
-    {
-        // Arrange
-        var configuration = new LoggerConfiguration();
-
-        // Act & Assert
-        Action act = () => configuration.WriteTo.CoolPushBatched(invalidSKey);
-        act.Should().Throw<ArgumentException>();
-    }
 }

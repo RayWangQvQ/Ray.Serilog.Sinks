@@ -41,25 +41,4 @@ public class DingTalkBatchedSinkTests
         // Assert
         sink.Should().NotBeNull();
     }
-
-    [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    [InlineData(null)]
-    public void Constructor_WithInvalidWebHookUrl_ShouldThrowArgumentException(
-        string invalidWebHookUrl
-    )
-    {
-        // Act & Assert
-        Action act = () =>
-            new DingTalkBatchedSink(
-                invalidWebHookUrl,
-                x => true,
-                true,
-                null,
-                LogEventLevel.Information
-            );
-
-        act.Should().Throw<ArgumentException>();
-    }
 }

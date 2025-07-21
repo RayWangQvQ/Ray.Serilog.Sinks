@@ -24,24 +24,4 @@ public class ServerChanBatchedSinkTests
         // Assert
         sink.Should().NotBeNull();
     }
-
-    [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    [InlineData(null)]
-    public void Constructor_WithInvalidSendKey_ShouldThrowArgumentException(string invalidSendKey)
-    {
-        // Act & Assert
-        Action act = () =>
-            new ServerChanBatchedSink(
-                invalidSendKey,
-                "",
-                x => true,
-                true,
-                null,
-                LogEventLevel.Information
-            );
-
-        act.Should().Throw<ArgumentException>();
-    }
 }

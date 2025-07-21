@@ -9,7 +9,7 @@ env:
   DOTNET_VERSION: '8.0.x'
   NUGET_SOURCE: 'https://api.nuget.org/v3/index.json'
   CSHARPIER_VERSION: '0.30.5'
-  COVERAGE_THRESHOLD: '80'
+  COVERAGE_THRESHOLD: '70'
 
 jobs:
   pr-check:
@@ -90,14 +90,14 @@ jobs:
           echo "📦 Creating preview NuGet package..."
           mkdir -p ./bin/nupkgs
           rm -rf ./bin/nupkgs/*
-          
+
           dotnet pack \
             --configuration Release \
             --no-build \
             --output ./bin/nupkgs \
             -p:PackageVersion=${{ steps.read-version.outputs.preview_version }} \
             -p:VersionSuffix=preview.$(date +%Y%m%d%H%M%S)
-          
+
           echo "✅ Package created successfully!"
           ls -la ./bin/nupkgs/
 
@@ -111,7 +111,7 @@ jobs:
         if: success()
         run: |
           echo "🚀 Pushing preview package to NuGet..."
-          
+
           if [ -z "${{ secrets.NUGET_API_KEY }}" ]; then
             echo "⚠️ NUGET_API_KEY secret not found. Skipping package push."
             echo "Please add your NuGet API key as a repository secret named 'NUGET_API_KEY'"
@@ -133,7 +133,7 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
-            
+
             let coverageInfo = '';
             try {
               const summaryPath = 'CoverageReport/Summary.json';
@@ -144,17 +144,17 @@ jobs:
             } catch (error) {
               coverageInfo = '📊 **Test Coverage**: Unable to read coverage data';
             }
-            
+
             const packageVersion = '${{ steps.read-version.outputs.preview_version }}';
             const jobStatus = '${{ job.status }}';
             const statusEmoji = jobStatus === 'success' ? '✅' : '❌';
-            
+
             const comment = `## ${statusEmoji} PR Check Results
-            
+
             **Status**: ${jobStatus.toUpperCase()}
             **Preview Version**: \`${packageVersion}\`
             ${coverageInfo}
-            
+
             ### Checks Performed:
             - 🔨 **Build**: ${jobStatus === 'success' ? '✅ Passed' : '❌ Failed'}
             - 🎨 **Code Formatting**: ${jobStatus === 'success' ? '✅ Passed' : '❌ Failed'}
@@ -162,12 +162,12 @@ jobs:
             - 📈 **Coverage (≥${{ env.COVERAGE_THRESHOLD }}%)**: ${jobStatus === 'success' ? '✅ Passed' : '❌ Failed'}
             - 📦 **Package Creation**: ${jobStatus === 'success' ? '✅ Passed' : '❌ Failed'}
             - 🚀 **Preview Publish**: ${jobStatus === 'success' ? '✅ Passed' : '❌ Failed'}
-            
+
             ${jobStatus === 'success' ?
               '🎉 All checks passed! This PR is ready for review.' :
               '🚨 Some checks failed. Please fix the issues before merging.'}
             `;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,

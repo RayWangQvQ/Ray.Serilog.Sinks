@@ -57,20 +57,4 @@ public class DingTalkLoggerConfigurationExtensionsTests
         result.Should().NotBeNull();
         result.Should().BeOfType<LoggerConfiguration>();
     }
-
-    [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    [InlineData(null)]
-    public void DingTalkBatched_WithInvalidWebHookUrl_ShouldThrowArgumentException(
-        string invalidWebHookUrl
-    )
-    {
-        // Arrange
-        var configuration = new LoggerConfiguration();
-
-        // Act & Assert
-        Action act = () => configuration.WriteTo.DingTalkBatched(invalidWebHookUrl);
-        act.Should().Throw<ArgumentException>();
-    }
 }

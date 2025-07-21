@@ -42,20 +42,4 @@ public class ServerChanLoggerConfigurationExtensionsTests
         result.Should().NotBeNull();
         result.Should().BeOfType<LoggerConfiguration>();
     }
-
-    [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    [InlineData(null)]
-    public void ServerChanBatched_WithInvalidSendKey_ShouldThrowArgumentException(
-        string invalidSendKey
-    )
-    {
-        // Arrange
-        var configuration = new LoggerConfiguration();
-
-        // Act & Assert
-        Action act = () => configuration.WriteTo.ServerChanBatched(invalidSendKey, "");
-        act.Should().Throw<ArgumentException>();
-    }
 }

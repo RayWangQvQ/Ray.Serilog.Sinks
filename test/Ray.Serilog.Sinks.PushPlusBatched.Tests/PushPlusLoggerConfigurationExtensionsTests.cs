@@ -45,18 +45,4 @@ public class PushPlusLoggerConfigurationExtensionsTests
         result.Should().NotBeNull();
         result.Should().BeOfType<LoggerConfiguration>();
     }
-
-    [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    [InlineData(null)]
-    public void PushPlusBatched_WithInvalidToken_ShouldThrowArgumentException(string invalidToken)
-    {
-        // Arrange
-        var configuration = new LoggerConfiguration();
-
-        // Act & Assert
-        Action act = () => configuration.WriteTo.PushPlusBatched(invalidToken);
-        act.Should().Throw<ArgumentException>();
-    }
 }

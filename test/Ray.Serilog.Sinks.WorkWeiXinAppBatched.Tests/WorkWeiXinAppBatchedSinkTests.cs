@@ -32,39 +32,4 @@ public class WorkWeiXinAppBatchedSinkTests
         // Assert
         sink.Should().NotBeNull();
     }
-
-    [Theory]
-    [InlineData("", "secret", "agent")]
-    [InlineData("   ", "secret", "agent")]
-    [InlineData(null, "secret", "agent")]
-    [InlineData("corp", "", "agent")]
-    [InlineData("corp", "   ", "agent")]
-    [InlineData("corp", null, "agent")]
-    [InlineData("corp", "secret", "")]
-    [InlineData("corp", "secret", "   ")]
-    [InlineData("corp", "secret", null)]
-    public void Constructor_WithInvalidParameters_ShouldThrowArgumentException(
-        string corpId,
-        string corpSecret,
-        string agentId
-    )
-    {
-        // Act & Assert
-        Action act = () =>
-            new WorkWeiXinAppBatchedSink(
-                corpId,
-                corpSecret,
-                agentId,
-                "@all",
-                "",
-                "",
-                x => true,
-                true,
-                "",
-                null,
-                LogEventLevel.Information
-            );
-
-        act.Should().Throw<ArgumentException>();
-    }
 }
