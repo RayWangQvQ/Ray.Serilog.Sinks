@@ -16,8 +16,14 @@ namespace Ray.Serilog.Sinks.MicrosoftTeamsBatched
             string outputTemplate,
             IFormatProvider formatProvider,
             LogEventLevel minimumLogEventLevel
+        )
+            : base(
+                predicate,
+                sendBatchesAsOneMessages,
+                outputTemplate,
+                formatProvider,
+                minimumLogEventLevel
             )
-            : base(predicate, sendBatchesAsOneMessages, outputTemplate, formatProvider, minimumLogEventLevel)
         {
             _host = host;
             _token = token;
@@ -25,7 +31,8 @@ namespace Ray.Serilog.Sinks.MicrosoftTeamsBatched
 
         public override void Emit(LogEvent logEvent)
         {
-            if (_host.IsNullOrEmpty() || _token.IsNullOrEmpty()) return;
+            if (_host.IsNullOrEmpty() || _token.IsNullOrEmpty())
+                return;
             base.Emit(logEvent);
         }
 

@@ -17,7 +17,14 @@ public class WorkWeiXinAppLoggerConfigurationExtensionsTests
         var configuration = new LoggerConfiguration();
 
         // Act
-        var result = configuration.WriteTo.WorkWeiXinAppBatched(TestCorpId, TestAgentId, TestCorpSecret, "@all", "", "");
+        var result = configuration.WriteTo.WorkWeiXinAppBatched(
+            TestCorpId,
+            TestAgentId,
+            TestCorpSecret,
+            "@all",
+            "",
+            ""
+        );
 
         // Assert
         result.Should().NotBeNull();
@@ -42,7 +49,8 @@ public class WorkWeiXinAppLoggerConfigurationExtensionsTests
             containsTrigger: "test",
             sendBatchesAsOneMessages: true,
             outputTemplate: "{Message}",
-            formatProvider: null);
+            formatProvider: null
+        );
 
         // Assert
         result.Should().NotBeNull();
@@ -59,13 +67,18 @@ public class WorkWeiXinAppLoggerConfigurationExtensionsTests
     [InlineData("corp", "secret", "")]
     [InlineData("corp", "secret", "   ")]
     [InlineData("corp", "secret", null)]
-    public void WorkWeiXinAppBatched_WithInvalidParameters_ShouldThrowArgumentException(string corpId, string corpSecret, string agentId)
+    public void WorkWeiXinAppBatched_WithInvalidParameters_ShouldThrowArgumentException(
+        string corpId,
+        string corpSecret,
+        string agentId
+    )
     {
         // Arrange
         var configuration = new LoggerConfiguration();
 
         // Act & Assert
-        Action act = () => configuration.WriteTo.WorkWeiXinAppBatched(corpId, agentId, corpSecret, "@all", "", "");
+        Action act = () =>
+            configuration.WriteTo.WorkWeiXinAppBatched(corpId, agentId, corpSecret, "@all", "", "");
         act.Should().Throw<ArgumentException>();
     }
 }

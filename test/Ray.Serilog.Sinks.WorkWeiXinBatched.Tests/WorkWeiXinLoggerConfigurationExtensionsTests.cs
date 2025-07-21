@@ -6,7 +6,8 @@ namespace Ray.Serilog.Sinks.WorkWeiXinBatched.Tests;
 
 public class WorkWeiXinLoggerConfigurationExtensionsTests
 {
-    private const string TestWebHookUrl = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=test_key";
+    private const string TestWebHookUrl =
+        "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=test_key";
 
     [Fact]
     public void WorkWeiXinBatched_WithValidWebHookUrl_ShouldReturnLoggerConfiguration()
@@ -34,7 +35,8 @@ public class WorkWeiXinLoggerConfigurationExtensionsTests
             containsTrigger: "test",
             sendBatchesAsOneMessages: true,
             formatProvider: null,
-            restrictedToMinimumLevel: LogEventLevel.Warning);
+            restrictedToMinimumLevel: LogEventLevel.Warning
+        );
 
         // Assert
         result.Should().NotBeNull();
@@ -45,7 +47,9 @@ public class WorkWeiXinLoggerConfigurationExtensionsTests
     [InlineData("")]
     [InlineData("   ")]
     [InlineData(null)]
-    public void WorkWeiXinBatched_WithInvalidWebHookUrl_ShouldThrowArgumentException(string invalidWebHookUrl)
+    public void WorkWeiXinBatched_WithInvalidWebHookUrl_ShouldThrowArgumentException(
+        string invalidWebHookUrl
+    )
     {
         // Arrange
         var configuration = new LoggerConfiguration();

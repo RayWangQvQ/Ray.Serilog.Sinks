@@ -23,7 +23,7 @@ namespace Ray.Serilog.Sinks.PushPlusBatched
             string topic = null,
             string channel = "",
             string webhook = ""
-            )
+        )
         {
             _apiUrl = new Uri(Host);
             _token = token;
@@ -40,10 +40,16 @@ namespace Ray.Serilog.Sinks.PushPlusBatched
             {
                 var re = PushPlusChannelType.wechat;
 
-                if (_channel.IsNullOrEmpty()) return re;
+                if (_channel.IsNullOrEmpty())
+                    return re;
 
-                bool suc = Enum.TryParse<PushPlusChannelType>(_channel, true, out PushPlusChannelType channel);
-                if (suc) re = channel;
+                bool suc = Enum.TryParse<PushPlusChannelType>(
+                    _channel,
+                    true,
+                    out PushPlusChannelType channel
+                );
+                if (suc)
+                    re = channel;
 
                 return re;
             }
@@ -64,7 +70,7 @@ namespace Ray.Serilog.Sinks.PushPlusBatched
                 title = Title,
                 content = Msg,
 
-                template = PushPlusMsgType.html.ToString()
+                template = PushPlusMsgType.html.ToString(),
             }.ToJsonStr();
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -81,7 +87,7 @@ namespace Ray.Serilog.Sinks.PushPlusBatched
         markdown,
         cloudMonitor,
         jenkins,
-        route
+        route,
     }
 
     public enum PushPlusChannelType
@@ -90,6 +96,6 @@ namespace Ray.Serilog.Sinks.PushPlusBatched
         webhook,
         cp,
         sms,
-        mail
+        mail,
     }
 }

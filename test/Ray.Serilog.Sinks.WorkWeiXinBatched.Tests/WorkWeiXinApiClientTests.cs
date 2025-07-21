@@ -4,7 +4,8 @@ namespace Ray.Serilog.Sinks.WorkWeiXinBatched.Tests;
 
 public class WorkWeiXinApiClientTests
 {
-    private const string TestWebHookUrl = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=test_key";
+    private const string TestWebHookUrl =
+        "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=test_key";
 
     [Fact]
     public void Constructor_WithValidWebHookUrl_ShouldCreateInstance()

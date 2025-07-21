@@ -18,10 +18,21 @@ namespace Ray.Serilog.Sinks.ServerChanBatched
             LogEventLevel restrictedToMinimumLevel = LogEventLevel.Verbose
         )
         {
-            if (containsTrigger.IsNullOrEmpty()) containsTrigger = Constants.DefaultContainsTrigger;
+            if (containsTrigger.IsNullOrEmpty())
+                containsTrigger = Constants.DefaultContainsTrigger;
             Predicate<LogEvent> predicate = x => x.MessageTemplate.Text.Contains(containsTrigger);
 
-            return loggerSinkConfiguration.Sink(new ServerChanBatchedSink(scKey, turboScKey, predicate, sendBatchesAsOneMessages, formatProvider, restrictedToMinimumLevel), restrictedToMinimumLevel);
+            return loggerSinkConfiguration.Sink(
+                new ServerChanBatchedSink(
+                    scKey,
+                    turboScKey,
+                    predicate,
+                    sendBatchesAsOneMessages,
+                    formatProvider,
+                    restrictedToMinimumLevel
+                ),
+                restrictedToMinimumLevel
+            );
         }
     }
 }

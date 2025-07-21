@@ -14,19 +14,26 @@ namespace Ray.Serilog.Sinks.MicrosoftTeamsBatched
             string outputTemplate,
             IFormatProvider formatProvider,
             LogEventLevel minimumLogEventLevel
+        )
+            : base(
+                predicate,
+                sendBatchesAsOneMessages,
+                outputTemplate,
+                formatProvider,
+                minimumLogEventLevel
             )
-            : base(predicate, sendBatchesAsOneMessages, outputTemplate, formatProvider, minimumLogEventLevel)
         {
             _webhook = webhook;
         }
 
         public override void Emit(LogEvent logEvent)
         {
-            if (_webhook.IsNullOrEmpty()) return;
+            if (_webhook.IsNullOrEmpty())
+                return;
             base.Emit(logEvent);
         }
 
-        protected override PushService PushService => new MicrosoftTeamsApiClient(
-            webhook: _webhook);
+        protected override PushService PushService =>
+            new MicrosoftTeamsApiClient(webhook: _webhook);
     }
 }

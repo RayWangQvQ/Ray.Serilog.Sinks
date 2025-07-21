@@ -26,9 +26,8 @@ namespace Ray.Serilog.Sinks.WorkWeiXinAppBatched
             string toUser = "",
             string toParty = "",
             string toTag = ""
-            )
+        )
         {
-
             _corpId = corpid;
             _agentId = agentId;
             _secret = secret;
@@ -38,7 +37,9 @@ namespace Ray.Serilog.Sinks.WorkWeiXinAppBatched
 
             // token
             var token = GetAccessToken(corpid, secret);
-            _apiUrl = new Uri($"https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={token}");
+            _apiUrl = new Uri(
+                $"https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={token}"
+            );
         }
 
         public override string ClientName => "WorkWeiXinApp";
@@ -54,10 +55,7 @@ namespace Ray.Serilog.Sinks.WorkWeiXinAppBatched
                 totag = _toTag,
                 agentid = _agentId,
                 msgtype = "text",
-                text = new
-                {
-                    content = Msg
-                }
+                text = new { content = Msg },
             }.ToJsonStr();
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -72,14 +70,16 @@ namespace Ray.Serilog.Sinks.WorkWeiXinAppBatched
 
             try
             {
-                var uri = new Uri($"https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={corpId}&corpsecret={secret}");
+                var uri = new Uri(
+                    $"https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={corpId}&corpsecret={secret}"
+                );
                 var response = _httpClient.GetAsync(uri).GetAwaiter().GetResult();
-                var content = response.Content.ReadAsStringAsync()
-                            .GetAwaiter().GetResult();
+                var content = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
                 var re = content.JsonDeserialize<WorkWeiXinAppTokenResponse>();
 
-                if (re.errcode == 0) return re.access_token;
+                if (re.errcode == 0)
+                    return re.access_token;
             }
             catch (Exception)
             {

@@ -24,7 +24,8 @@ public class TelegramBatchedSink : BatchedSink
         bool sendBatchesAsOneMessages,
         IFormatProvider formatProvider,
         LogEventLevel minimumLogEventLevel
-    ) : base(predicate, sendBatchesAsOneMessages, formatProvider, minimumLogEventLevel)
+    )
+        : base(predicate, sendBatchesAsOneMessages, formatProvider, minimumLogEventLevel)
     {
         _botToken = botToken;
         _chatId = chatId;
@@ -33,9 +34,11 @@ public class TelegramBatchedSink : BatchedSink
 
     public override void Emit(LogEvent logEvent)
     {
-        if (_botToken.IsNullOrEmpty() | _chatId.IsNullOrEmpty()) return;
+        if (_botToken.IsNullOrEmpty() | _chatId.IsNullOrEmpty())
+            return;
         base.Emit(logEvent);
     }
 
-    protected override PushService PushService => new TelegramApiClient(_botToken, _chatId, _proxy, 5);
+    protected override PushService PushService =>
+        new TelegramApiClient(_botToken, _chatId, _proxy, 5);
 }

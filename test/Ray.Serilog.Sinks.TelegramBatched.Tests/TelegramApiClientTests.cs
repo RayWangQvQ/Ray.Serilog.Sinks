@@ -26,15 +26,18 @@ public class TelegramApiClientTests
     {
         // Act & Assert
         Action act = () => new TelegramApiClient(invalidBotToken, TestChatId);
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("The bot token mustn't be empty.*");
+        act.Should().Throw<ArgumentException>().WithMessage("The bot token mustn't be empty.*");
     }
 
     [Fact]
     public void Constructor_WithProxyString_ShouldCreateInstance()
     {
         // Arrange & Act
-        var client = new TelegramApiClient(TestBotToken, TestChatId, "http://proxy.example.com:8080");
+        var client = new TelegramApiClient(
+            TestBotToken,
+            TestChatId,
+            "http://proxy.example.com:8080"
+        );
 
         // Assert
         client.Should().NotBeNull();

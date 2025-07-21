@@ -16,10 +16,7 @@ public class TelegramLoggerConfigurationExtensionsTests
         var loggerConfiguration = new LoggerConfiguration();
 
         // Act
-        var result = loggerConfiguration.WriteTo.TelegramBatched(
-            TestBotToken,
-            TestChatId,
-            "");
+        var result = loggerConfiguration.WriteTo.TelegramBatched(TestBotToken, TestChatId, "");
 
         // Assert
         result.Should().NotBeNull();
@@ -40,7 +37,8 @@ public class TelegramLoggerConfigurationExtensionsTests
             "【Push】",
             false,
             null,
-            LogEventLevel.Warning);
+            LogEventLevel.Warning
+        );
 
         // Assert
         result.Should().NotBeNull();
@@ -57,7 +55,8 @@ public class TelegramLoggerConfigurationExtensionsTests
             TestBotToken,
             TestChatId,
             "",
-            null);
+            null
+        );
 
         // Assert
         result.Should().NotBeNull();
@@ -70,11 +69,7 @@ public class TelegramLoggerConfigurationExtensionsTests
         var loggerConfiguration = new LoggerConfiguration();
 
         // Act
-        var result = loggerConfiguration.WriteTo.TelegramBatched(
-            TestBotToken,
-            TestChatId,
-            "",
-            "");
+        var result = loggerConfiguration.WriteTo.TelegramBatched(TestBotToken, TestChatId, "", "");
 
         // Assert
         result.Should().NotBeNull();

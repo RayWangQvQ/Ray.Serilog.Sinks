@@ -19,7 +19,8 @@ public class OtherApiBatchedSinkTests
             x => true,
             true,
             null,
-            LogEventLevel.Information);
+            LogEventLevel.Information
+        );
 
         // Assert
         sink.Should().NotBeNull();

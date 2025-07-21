@@ -38,7 +38,8 @@ public class PushPlusLoggerConfigurationExtensionsTests
             sendBatchesAsOneMessages: true,
             outputTemplate: "{Message}",
             formatProvider: null,
-            restrictedToMinimumLevel: LogEventLevel.Warning);
+            restrictedToMinimumLevel: LogEventLevel.Warning
+        );
 
         // Assert
         result.Should().NotBeNull();

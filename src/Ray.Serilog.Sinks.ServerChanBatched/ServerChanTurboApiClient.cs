@@ -34,8 +34,8 @@ namespace Ray.Serilog.Sinks.ServerChanBatched
         {
             var dic = new Dictionary<string, string>
             {
-                {"title", Title},//标题必填
-                {"desp", Msg}
+                { "title", Title }, //标题必填
+                { "desp", Msg },
             };
             var content = new FormUrlEncodedContent(dic);
             var response = _httpClient.PostAsync(_apiUrl, content).GetAwaiter().GetResult();

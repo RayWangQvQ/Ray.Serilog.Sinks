@@ -6,7 +6,8 @@ namespace Ray.Serilog.Sinks.DingTalkBatched.Tests;
 
 public class DingTalkLoggerConfigurationExtensionsTests
 {
-    private const string TestWebHookUrl = "https://oapi.dingtalk.com/robot/send?access_token=test_token";
+    private const string TestWebHookUrl =
+        "https://oapi.dingtalk.com/robot/send?access_token=test_token";
     private const string TestSecret = "test_secret_123456";
 
     [Fact]
@@ -49,7 +50,8 @@ public class DingTalkLoggerConfigurationExtensionsTests
             containsTrigger: "test",
             sendBatchesAsOneMessages: true,
             formatProvider: null,
-            restrictedToMinimumLevel: LogEventLevel.Warning);
+            restrictedToMinimumLevel: LogEventLevel.Warning
+        );
 
         // Assert
         result.Should().NotBeNull();
@@ -60,7 +62,9 @@ public class DingTalkLoggerConfigurationExtensionsTests
     [InlineData("")]
     [InlineData("   ")]
     [InlineData(null)]
-    public void DingTalkBatched_WithInvalidWebHookUrl_ShouldThrowArgumentException(string invalidWebHookUrl)
+    public void DingTalkBatched_WithInvalidWebHookUrl_ShouldThrowArgumentException(
+        string invalidWebHookUrl
+    )
     {
         // Arrange
         var configuration = new LoggerConfiguration();

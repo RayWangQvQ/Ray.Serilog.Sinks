@@ -35,7 +35,8 @@ public class CoolPushLoggerConfigurationExtensionsTests
             restrictedToMinimumLevel: LogEventLevel.Warning,
             containsTrigger: "test",
             sendBatchesAsOneMessages: true,
-            formatProvider: null);
+            formatProvider: null
+        );
 
         // Assert
         result.Should().NotBeNull();

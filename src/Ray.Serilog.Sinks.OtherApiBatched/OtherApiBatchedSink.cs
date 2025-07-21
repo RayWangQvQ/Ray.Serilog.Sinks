@@ -22,7 +22,8 @@ namespace Ray.Serilog.Sinks.OtherApiBatched
             bool sendBatchesAsOneMessages,
             IFormatProvider formatProvider,
             LogEventLevel minimumLogEventLevel
-            ) : base(predicate, sendBatchesAsOneMessages, formatProvider, minimumLogEventLevel)
+        )
+            : base(predicate, sendBatchesAsOneMessages, formatProvider, minimumLogEventLevel)
         {
             _api = api;
             _jsonTemplate = jsonTemplate;
@@ -31,10 +32,12 @@ namespace Ray.Serilog.Sinks.OtherApiBatched
 
         public override void Emit(LogEvent logEvent)
         {
-            if (_api.IsNullOrEmpty()) return;
+            if (_api.IsNullOrEmpty())
+                return;
             base.Emit(logEvent);
         }
 
-        protected override PushService PushService => new OtherApiClient(_api, _jsonTemplate, _placeholder);
+        protected override PushService PushService =>
+            new OtherApiClient(_api, _jsonTemplate, _placeholder);
     }
 }

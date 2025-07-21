@@ -1,7 +1,7 @@
 using FluentAssertions;
 using Serilog;
-using Serilog.Events;
 using Serilog.Core;
+using Serilog.Events;
 
 namespace Ray.Serilog.Sinks.TelegramBatched.Tests;
 
@@ -22,7 +22,8 @@ public class TelegramBatchedSinkTests
             x => true,
             true,
             null,
-            LogEventLevel.Information);
+            LogEventLevel.Information
+        );
 
         // Assert
         sink.Should().NotBeNull();
@@ -39,7 +40,8 @@ public class TelegramBatchedSinkTests
             x => true,
             true,
             null,
-            LogEventLevel.Information);
+            LogEventLevel.Information
+        );
 
         // Assert
         sink.Should().NotBeNull();
@@ -56,7 +58,8 @@ public class TelegramBatchedSinkTests
             x => true,
             true,
             null,
-            LogEventLevel.Information);
+            LogEventLevel.Information
+        );
 
         var logEvent = CreateTestLogEvent(LogEventLevel.Information, "Test message");
 
@@ -75,7 +78,8 @@ public class TelegramBatchedSinkTests
             x => true,
             true,
             null,
-            LogEventLevel.Information);
+            LogEventLevel.Information
+        );
 
         var logEvent = CreateTestLogEvent(LogEventLevel.Information, "Test message");
 
@@ -94,7 +98,8 @@ public class TelegramBatchedSinkTests
             x => true,
             true,
             null,
-            LogEventLevel.Information);
+            LogEventLevel.Information
+        );
 
         // Act & Assert
         sink.Invoking(s => s.Emit(null!)).Should().Throw<ArgumentNullException>();
@@ -117,7 +122,8 @@ public class TelegramBatchedSinkTests
             x => true,
             true,
             null,
-            logLevel);
+            logLevel
+        );
 
         // Assert
         sink.Should().NotBeNull();
@@ -134,7 +140,8 @@ public class TelegramBatchedSinkTests
             x => true,
             true,
             null,
-            LogEventLevel.Information);
+            LogEventLevel.Information
+        );
 
         // Act & Assert
         sink.Invoking(s => s.Dispose()).Should().NotThrow();
@@ -144,25 +151,25 @@ public class TelegramBatchedSinkTests
     {
         // 使用Serilog的内部方法创建LogEvent
         LogEvent capturedEvent = null;
-        
+
         var logger = new LoggerConfiguration()
             .WriteTo.Sink(new TestLogEventSink(e => capturedEvent = e))
             .CreateLogger();
-            
+
         logger.Write(level, messageTemplate);
-        
+
         return capturedEvent!;
     }
-    
+
     private class TestLogEventSink : ILogEventSink
     {
         private readonly Action<LogEvent> _onEmit;
-        
+
         public TestLogEventSink(Action<LogEvent> onEmit)
         {
             _onEmit = onEmit;
         }
-        
+
         public void Emit(LogEvent logEvent)
         {
             _onEmit(logEvent);

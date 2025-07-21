@@ -35,7 +35,8 @@ public class ServerChanLoggerConfigurationExtensionsTests
             containsTrigger: "test",
             sendBatchesAsOneMessages: true,
             formatProvider: null,
-            restrictedToMinimumLevel: LogEventLevel.Warning);
+            restrictedToMinimumLevel: LogEventLevel.Warning
+        );
 
         // Assert
         result.Should().NotBeNull();
@@ -46,7 +47,9 @@ public class ServerChanLoggerConfigurationExtensionsTests
     [InlineData("")]
     [InlineData("   ")]
     [InlineData(null)]
-    public void ServerChanBatched_WithInvalidSendKey_ShouldThrowArgumentException(string invalidSendKey)
+    public void ServerChanBatched_WithInvalidSendKey_ShouldThrowArgumentException(
+        string invalidSendKey
+    )
     {
         // Arrange
         var configuration = new LoggerConfiguration();

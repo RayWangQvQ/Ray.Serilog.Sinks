@@ -10,7 +10,11 @@ public class OtherApiClientTests
     public void Constructor_WithValidApiUrl_ShouldCreateInstance()
     {
         // Arrange & Act
-        var client = new OtherApiClient(TestApiUrl, "{\"message\": \"{{message}}\"}", "{{message}}");
+        var client = new OtherApiClient(
+            TestApiUrl,
+            "{\"message\": \"{{message}}\"}",
+            "{{message}}"
+        );
 
         // Assert
         client.Should().NotBeNull();
@@ -32,7 +36,11 @@ public class OtherApiClientTests
     public void PushMessage_WithValidParameters_ShouldReturnResponse()
     {
         // Arrange
-        var client = new OtherApiClient(TestApiUrl, "{\"message\": \"{{message}}\"}", "{{message}}");
+        var client = new OtherApiClient(
+            TestApiUrl,
+            "{\"message\": \"{{message}}\"}",
+            "{{message}}"
+        );
 
         // Act
         var act = () => client.PushMessage("Test Content", "Test Title");

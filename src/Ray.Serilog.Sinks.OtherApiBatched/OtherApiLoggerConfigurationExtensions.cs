@@ -21,12 +21,24 @@ namespace Ray.Serilog.Sinks.OtherApiBatched
             bool sendBatchesAsOneMessages = true,
             IFormatProvider formatProvider = null,
             LogEventLevel restrictedToMinimumLevel = LogEventLevel.Verbose
-            )
+        )
         {
-            if (containsTrigger.IsNullOrEmpty()) containsTrigger = Constants.DefaultContainsTrigger;
+            if (containsTrigger.IsNullOrEmpty())
+                containsTrigger = Constants.DefaultContainsTrigger;
             Predicate<LogEvent> predicate = x => x.MessageTemplate.Text.Contains(containsTrigger);
 
-            return loggerSinkConfiguration.Sink(new OtherApiBatchedSink(api, bodyJsonTemplate, placeholder, predicate, sendBatchesAsOneMessages, formatProvider, restrictedToMinimumLevel), restrictedToMinimumLevel);
+            return loggerSinkConfiguration.Sink(
+                new OtherApiBatchedSink(
+                    api,
+                    bodyJsonTemplate,
+                    placeholder,
+                    predicate,
+                    sendBatchesAsOneMessages,
+                    formatProvider,
+                    restrictedToMinimumLevel
+                ),
+                restrictedToMinimumLevel
+            );
         }
     }
 }

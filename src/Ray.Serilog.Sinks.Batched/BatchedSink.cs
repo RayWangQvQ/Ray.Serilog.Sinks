@@ -18,23 +18,25 @@ namespace Ray.Serilog.Sinks.Batched
         private readonly bool _sendBatchesAsOneMessages;
         private readonly ITextFormatter _formatter;
 
-        private readonly BoundedConcurrentQueue<LogEvent> _queue = new BoundedConcurrentQueue<LogEvent>();
+        private readonly BoundedConcurrentQueue<LogEvent> _queue =
+            new BoundedConcurrentQueue<LogEvent>();
 
         public BatchedSink(
             Predicate<LogEvent> predicate,
             bool sendBatchesAsOneMessages,
             IFormatProvider formatProvider,
-            LogEventLevel minimumLogEventLevel)
+            LogEventLevel minimumLogEventLevel
+        )
             : this(predicate, sendBatchesAsOneMessages, null, formatProvider, minimumLogEventLevel)
-        {
-        }
+        { }
 
         public BatchedSink(
             Predicate<LogEvent> predicate,
             bool sendBatchesAsOneMessages,
             string outputTemplate = "{Message:lj}{NewLine}{Exception}",
             IFormatProvider formatProvider = null,
-            LogEventLevel minimumLogEventLevel = LogEventLevel.Verbose)
+            LogEventLevel minimumLogEventLevel = LogEventLevel.Verbose
+        )
         {
             _predicate = predicate ?? (x => true);
             _minimumLogEventLevel = minimumLogEventLevel;
@@ -48,11 +50,13 @@ namespace Ray.Serilog.Sinks.Batched
 
         public virtual void Emit(LogEvent logEvent)
         {
-            if (logEvent == null) throw new ArgumentNullException("logEvent");
+            if (logEvent == null)
+                throw new ArgumentNullException("logEvent");
 
             try
             {
-                if (logEvent.Level < _minimumLogEventLevel) return;
+                if (logEvent.Level < _minimumLogEventLevel)
+                    return;
                 _queue.TryEnqueue(logEvent);
 
                 if (_predicate(logEvent))
@@ -68,7 +72,11 @@ namespace Ray.Serilog.Sinks.Batched
             }
             catch (Exception ex)
             {
-                SelfLog.WriteLine("Exception while emitting periodic batch from {0}: {1}", this, ex.Message);
+                SelfLog.WriteLine(
+                    "Exception while emitting periodic batch from {0}: {1}",
+                    this,
+                    ex.Message
+                );
             }
         }
 
@@ -108,8 +116,10 @@ namespace Ray.Serilog.Sinks.Batched
                 SelfLog.WriteLine($"Response status: {result.StatusCode}.");
                 try
                 {
-                    var content = result.Content.ReadAsStringAsync()
-                        .GetAwaiter().GetResult()
+                    var content = result
+                        .Content.ReadAsStringAsync()
+                        .GetAwaiter()
+                        .GetResult()
                         .Replace("{", "{{")
                         .Replace("}", "}}");
                     SelfLog.WriteLine($"Response content: {content}.{Environment.NewLine}");
@@ -195,15 +205,16 @@ namespace Ray.Serilog.Sinks.Batched
         {
             try
             {
-                if (_queue == null) return;
-                
+                if (_queue == null)
+                    return;
+
                 var remainingEvents = new Queue<LogEvent>();
-                    
+
                 while (_queue.TryDequeue(out LogEvent item))
                 {
                     remainingEvents.Enqueue(item);
                 }
-                    
+
                 if (remainingEvents.Count > 0)
                 {
                     EmitBatch(remainingEvents, "应用关闭推送");

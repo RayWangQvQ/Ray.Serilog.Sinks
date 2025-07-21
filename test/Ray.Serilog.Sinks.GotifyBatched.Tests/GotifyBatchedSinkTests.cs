@@ -22,7 +22,8 @@ public class GotifyBatchedSinkTests
             true,
             "{Message}",
             null,
-            LogEventLevel.Information);
+            LogEventLevel.Information
+        );
 
         // Assert
         sink.Should().NotBeNull();
@@ -35,17 +36,22 @@ public class GotifyBatchedSinkTests
     [InlineData("https://example.com", "")]
     [InlineData("https://example.com", "   ")]
     [InlineData("https://example.com", null)]
-    public void Constructor_WithInvalidParameters_ShouldThrowArgumentException(string host, string token)
+    public void Constructor_WithInvalidParameters_ShouldThrowArgumentException(
+        string host,
+        string token
+    )
     {
         // Act & Assert
-        Action act = () => new GotifyBatchedSink(
-            host,
-            token,
-            x => true,
-            true,
-            "{Message}",
-            null,
-            LogEventLevel.Information);
+        Action act = () =>
+            new GotifyBatchedSink(
+                host,
+                token,
+                x => true,
+                true,
+                "{Message}",
+                null,
+                LogEventLevel.Information
+            );
 
         act.Should().Throw<ArgumentException>();
     }

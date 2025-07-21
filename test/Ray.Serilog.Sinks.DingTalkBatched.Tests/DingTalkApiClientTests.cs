@@ -4,7 +4,8 @@ namespace Ray.Serilog.Sinks.DingTalkBatched.Tests;
 
 public class DingTalkApiClientTests
 {
-    private const string TestWebHookUrl = "https://oapi.dingtalk.com/robot/send?access_token=test_token";
+    private const string TestWebHookUrl =
+        "https://oapi.dingtalk.com/robot/send?access_token=test_token";
     private const string TestSecret = "test_secret_123456";
 
     [Fact]

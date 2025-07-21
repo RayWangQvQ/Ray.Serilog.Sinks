@@ -21,7 +21,8 @@ public class PushPlusBatchedSinkTests
             true,
             "",
             null,
-            LogEventLevel.Information);
+            LogEventLevel.Information
+        );
 
         // Assert
         sink.Should().NotBeNull();
@@ -34,16 +35,18 @@ public class PushPlusBatchedSinkTests
     public void Constructor_WithInvalidToken_ShouldThrowArgumentException(string invalidToken)
     {
         // Act & Assert
-        Action act = () => new PushPlusBatchedSink(
-            invalidToken,
-            "",
-            "",
-            "",
-            x => true,
-            true,
-            "",
-            null,
-            LogEventLevel.Information);
+        Action act = () =>
+            new PushPlusBatchedSink(
+                invalidToken,
+                "",
+                "",
+                "",
+                x => true,
+                true,
+                "",
+                null,
+                LogEventLevel.Information
+            );
 
         act.Should().Throw<ArgumentException>();
     }

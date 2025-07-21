@@ -38,7 +38,8 @@ public class GotifyConfigurationExtensionsTests
             containsTrigger: "test",
             sendBatchesAsOneMessages: true,
             outputTemplate: "{Message}",
-            formatProvider: null);
+            formatProvider: null
+        );
 
         // Assert
         result.Should().NotBeNull();
@@ -52,7 +53,10 @@ public class GotifyConfigurationExtensionsTests
     [InlineData("https://example.com", "")]
     [InlineData("https://example.com", "   ")]
     [InlineData("https://example.com", null)]
-    public void GotifyBatched_WithInvalidParameters_ShouldThrowArgumentException(string host, string token)
+    public void GotifyBatched_WithInvalidParameters_ShouldThrowArgumentException(
+        string host,
+        string token
+    )
     {
         // Arrange
         var configuration = new LoggerConfiguration();

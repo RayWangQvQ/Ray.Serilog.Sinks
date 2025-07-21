@@ -14,7 +14,6 @@ namespace Ray.Serilog.Sinks.OtherApiBatched
 
         private readonly HttpClient _httpClient = new HttpClient();
 
-
         public OtherApiClient(string apiUrl, string json, string placeholder)
         {
             _json = json;

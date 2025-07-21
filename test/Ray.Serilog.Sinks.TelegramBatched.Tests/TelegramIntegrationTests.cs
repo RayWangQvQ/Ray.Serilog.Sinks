@@ -10,10 +10,7 @@ public class TelegramIntegrationTests
     {
         // Arrange & Act
         var logger = new LoggerConfiguration()
-            .WriteTo.TelegramBatched(
-                "test_token",
-                "test_chat_id",
-                "")
+            .WriteTo.TelegramBatched("test_token", "test_chat_id", "")
             .CreateLogger();
 
         // Assert
@@ -25,10 +22,7 @@ public class TelegramIntegrationTests
     {
         // Arrange
         var logger = new LoggerConfiguration()
-            .WriteTo.TelegramBatched(
-                "test_token",
-                "test_chat_id",
-                "")
+            .WriteTo.TelegramBatched("test_token", "test_chat_id", "")
             .CreateLogger();
 
         // Act & Assert
@@ -40,11 +34,7 @@ public class TelegramIntegrationTests
     {
         // Arrange
         var logger = new LoggerConfiguration()
-            .WriteTo.TelegramBatched(
-                "test_token",
-                "test_chat_id",
-                "",
-                "【Push】")
+            .WriteTo.TelegramBatched("test_token", "test_chat_id", "", "【Push】")
             .CreateLogger();
 
         // Act & Assert

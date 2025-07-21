@@ -15,7 +15,11 @@ public class OtherApiLoggerConfigurationExtensionsTests
         var configuration = new LoggerConfiguration();
 
         // Act
-        var result = configuration.WriteTo.OtherApiBatched(TestApiUrl, "{\"message\": \"{{message}}\"}", "{{message}}");
+        var result = configuration.WriteTo.OtherApiBatched(
+            TestApiUrl,
+            "{\"message\": \"{{message}}\"}",
+            "{{message}}"
+        );
 
         // Assert
         result.Should().NotBeNull();
@@ -36,7 +40,8 @@ public class OtherApiLoggerConfigurationExtensionsTests
             restrictedToMinimumLevel: LogEventLevel.Warning,
             containsTrigger: "test",
             sendBatchesAsOneMessages: true,
-            formatProvider: null);
+            formatProvider: null
+        );
 
         // Assert
         result.Should().NotBeNull();

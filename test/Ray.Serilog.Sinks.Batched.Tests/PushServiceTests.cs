@@ -36,7 +36,10 @@ public class PushServiceTests
     [InlineData("title", "")]
     [InlineData(null, "content")]
     [InlineData("title", null)]
-    public void PushMessage_WithInvalidParameters_ShouldHandleGracefully(string title, string content)
+    public void PushMessage_WithInvalidParameters_ShouldHandleGracefully(
+        string title,
+        string content
+    )
     {
         // Arrange
         var pushService = new TestPushService();

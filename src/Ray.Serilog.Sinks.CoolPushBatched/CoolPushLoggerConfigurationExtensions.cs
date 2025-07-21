@@ -17,10 +17,20 @@ namespace Ray.Serilog.Sinks.CoolPushBatched
             LogEventLevel restrictedToMinimumLevel = LogEventLevel.Verbose
         )
         {
-            if (containsTrigger.IsNullOrEmpty()) containsTrigger = Constants.DefaultContainsTrigger;
+            if (containsTrigger.IsNullOrEmpty())
+                containsTrigger = Constants.DefaultContainsTrigger;
             Predicate<LogEvent> predicate = x => x.MessageTemplate.Text.Contains(containsTrigger);
 
-            return loggerSinkConfiguration.Sink(new CoolPushBatchedSink(sKey, predicate, sendBatchesAsOneMessages, formatProvider, restrictedToMinimumLevel), restrictedToMinimumLevel);
+            return loggerSinkConfiguration.Sink(
+                new CoolPushBatchedSink(
+                    sKey,
+                    predicate,
+                    sendBatchesAsOneMessages,
+                    formatProvider,
+                    restrictedToMinimumLevel
+                ),
+                restrictedToMinimumLevel
+            );
         }
     }
 }

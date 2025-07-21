@@ -4,7 +4,8 @@ namespace Ray.Serilog.Sinks.MicrosoftTeamsBatched.Tests;
 
 public class MicrosoftTeamsApiClientTests
 {
-    private const string TestWebHookUrl = "https://outlook.office.com/webhook/test/IncomingWebhook/test";
+    private const string TestWebHookUrl =
+        "https://outlook.office.com/webhook/test/IncomingWebhook/test";
 
     [Theory]
     [InlineData("")]

@@ -18,7 +18,8 @@ public class ServerChanBatchedSinkTests
             x => true,
             true,
             null,
-            LogEventLevel.Information);
+            LogEventLevel.Information
+        );
 
         // Assert
         sink.Should().NotBeNull();
@@ -31,13 +32,15 @@ public class ServerChanBatchedSinkTests
     public void Constructor_WithInvalidSendKey_ShouldThrowArgumentException(string invalidSendKey)
     {
         // Act & Assert
-        Action act = () => new ServerChanBatchedSink(
-            invalidSendKey,
-            "",
-            x => true,
-            true,
-            null,
-            LogEventLevel.Information);
+        Action act = () =>
+            new ServerChanBatchedSink(
+                invalidSendKey,
+                "",
+                x => true,
+                true,
+                null,
+                LogEventLevel.Information
+            );
 
         act.Should().Throw<ArgumentException>();
     }

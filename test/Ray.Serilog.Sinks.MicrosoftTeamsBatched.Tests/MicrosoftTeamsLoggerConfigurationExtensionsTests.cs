@@ -6,7 +6,8 @@ namespace Ray.Serilog.Sinks.MicrosoftTeamsBatched.Tests;
 
 public class MicrosoftTeamsLoggerConfigurationExtensionsTests
 {
-    private const string TestWebHookUrl = "https://outlook.office.com/webhook/test/IncomingWebhook/test";
+    private const string TestWebHookUrl =
+        "https://outlook.office.com/webhook/test/IncomingWebhook/test";
 
     [Fact]
     public void MicrosoftTeamsBatched_WithValidWebHookUrl_ShouldReturnLoggerConfiguration()
@@ -35,7 +36,8 @@ public class MicrosoftTeamsLoggerConfigurationExtensionsTests
             containsTrigger: "test",
             sendBatchesAsOneMessages: true,
             outputTemplate: "{Message}",
-            formatProvider: null);
+            formatProvider: null
+        );
 
         // Assert
         result.Should().NotBeNull();
@@ -46,7 +48,9 @@ public class MicrosoftTeamsLoggerConfigurationExtensionsTests
     [InlineData("")]
     [InlineData("   ")]
     [InlineData(null)]
-    public void MicrosoftTeamsBatched_WithInvalidWebHookUrl_ShouldThrowArgumentException(string invalidWebHookUrl)
+    public void MicrosoftTeamsBatched_WithInvalidWebHookUrl_ShouldThrowArgumentException(
+        string invalidWebHookUrl
+    )
     {
         // Arrange
         var configuration = new LoggerConfiguration();

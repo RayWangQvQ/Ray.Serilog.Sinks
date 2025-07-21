@@ -26,8 +26,14 @@ namespace Ray.Serilog.Sinks.WorkWeiXinAppBatched
             string outputTemplate,
             IFormatProvider formatProvider,
             LogEventLevel minimumLogEventLevel
+        )
+            : base(
+                predicate,
+                sendBatchesAsOneMessages,
+                outputTemplate,
+                formatProvider,
+                minimumLogEventLevel
             )
-            : base(predicate, sendBatchesAsOneMessages, outputTemplate, formatProvider, minimumLogEventLevel)
         {
             _corpId = corpId;
             _agentId = agentId;
@@ -39,16 +45,12 @@ namespace Ray.Serilog.Sinks.WorkWeiXinAppBatched
 
         public override void Emit(LogEvent logEvent)
         {
-            if (_corpId.IsNullOrEmpty()||_secret.IsNullOrEmpty()||_agentId.IsNullOrEmpty()) return;
+            if (_corpId.IsNullOrEmpty() || _secret.IsNullOrEmpty() || _agentId.IsNullOrEmpty())
+                return;
             base.Emit(logEvent);
         }
 
-        protected override PushService PushService => new WorkWeiXinAppApiClient(
-            _corpId,
-            _agentId,
-            _secret,
-            _toUser,
-            _toParty,
-            _toTag);
+        protected override PushService PushService =>
+            new WorkWeiXinAppApiClient(_corpId, _agentId, _secret, _toUser, _toParty, _toTag);
     }
 }

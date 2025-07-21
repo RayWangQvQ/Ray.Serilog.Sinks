@@ -18,10 +18,20 @@ namespace Ray.Serilog.Sinks.DingTalkBatched
             LogEventLevel restrictedToMinimumLevel = LogEventLevel.Verbose
         )
         {
-            if (containsTrigger.IsNullOrEmpty()) containsTrigger = Constants.DefaultContainsTrigger;
+            if (containsTrigger.IsNullOrEmpty())
+                containsTrigger = Constants.DefaultContainsTrigger;
             Predicate<LogEvent> predicate = x => x.MessageTemplate.Text.Contains(containsTrigger);
 
-            return loggerSinkConfiguration.Sink(new DingTalkBatchedSink(webHookUrl, predicate, sendBatchesAsOneMessages, formatProvider, restrictedToMinimumLevel), restrictedToMinimumLevel);
+            return loggerSinkConfiguration.Sink(
+                new DingTalkBatchedSink(
+                    webHookUrl,
+                    predicate,
+                    sendBatchesAsOneMessages,
+                    formatProvider,
+                    restrictedToMinimumLevel
+                ),
+                restrictedToMinimumLevel
+            );
         }
     }
 }

@@ -10,9 +10,7 @@ namespace Ray.Serilog.Sinks.MicrosoftTeamsBatched
         private readonly Uri _apiUrl;
         private readonly HttpClient _httpClient = new HttpClient();
 
-        public MicrosoftTeamsApiClient(
-            string webhook
-            )
+        public MicrosoftTeamsApiClient(string webhook)
         {
             _apiUrl = new Uri(webhook);
         }
@@ -23,10 +21,7 @@ namespace Ray.Serilog.Sinks.MicrosoftTeamsBatched
 
         public override HttpResponseMessage DoSend()
         {
-            var json = new
-            {
-                text=Msg
-            }.ToJsonStr();
+            var json = new { text = Msg }.ToJsonStr();
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 

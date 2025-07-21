@@ -17,7 +17,8 @@ namespace Ray.Serilog.Sinks.ServerChanBatched
             bool sendBatchesAsOneMessages,
             IFormatProvider formatProvider,
             LogEventLevel minimumLogEventLevel
-            ) : base(predicate, sendBatchesAsOneMessages, formatProvider, minimumLogEventLevel)
+        )
+            : base(predicate, sendBatchesAsOneMessages, formatProvider, minimumLogEventLevel)
         {
             _scKey = scKey;
             _turboScKey = turboScKey;
@@ -25,7 +26,8 @@ namespace Ray.Serilog.Sinks.ServerChanBatched
 
         public override void Emit(LogEvent logEvent)
         {
-            if (_scKey.IsNullOrEmpty() && _turboScKey.IsNullOrEmpty()) return;
+            if (_scKey.IsNullOrEmpty() && _turboScKey.IsNullOrEmpty())
+                return;
             base.Emit(logEvent);
         }
 
@@ -33,7 +35,8 @@ namespace Ray.Serilog.Sinks.ServerChanBatched
         {
             get
             {
-                if (!_turboScKey.IsNullOrEmpty()) return new ServerChanTurboApiClient(_turboScKey);
+                if (!_turboScKey.IsNullOrEmpty())
+                    return new ServerChanTurboApiClient(_turboScKey);
                 return new ServerChanApiClient(_scKey);
             }
         }

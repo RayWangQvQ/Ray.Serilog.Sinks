@@ -17,7 +17,8 @@ public class CoolPushBatchedSinkTests
             x => true,
             true,
             null,
-            LogEventLevel.Information);
+            LogEventLevel.Information
+        );
 
         // Assert
         sink.Should().NotBeNull();
@@ -30,12 +31,8 @@ public class CoolPushBatchedSinkTests
     public void Constructor_WithInvalidSKey_ShouldThrowArgumentException(string invalidSKey)
     {
         // Act & Assert
-        Action act = () => new CoolPushBatchedSink(
-            invalidSKey,
-            x => true,
-            true,
-            null,
-            LogEventLevel.Information);
+        Action act = () =>
+            new CoolPushBatchedSink(invalidSKey, x => true, true, null, LogEventLevel.Information);
 
         act.Should().Throw<ArgumentException>();
     }
