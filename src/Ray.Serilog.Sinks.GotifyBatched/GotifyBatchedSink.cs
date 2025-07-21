@@ -30,10 +30,5 @@ namespace Ray.Serilog.Sinks.MicrosoftTeamsBatched
         }
 
         protected override PushService PushService => new GotifyApiClient(_host, _token);
-
-        public override void Dispose()
-        {
-            //todo
-        }
     }
 }

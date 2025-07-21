@@ -27,6 +27,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ray.Serilog.Sinks.WorkWeiXi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ray.Serilog.Sinks.Batched", "src\Ray.Serilog.Sinks.Batched\Ray.Serilog.Sinks.Batched.csproj", "{2FE32F8F-15B3-4A8B-A3AA-9E7B4C441E3A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{819AD12E-05EF-4DEC-BAB8-9AEAF59E5DBF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ray.Serilog.Sinks.TelegramBatched.Tests", "test\Ray.Serilog.Sinks.TelegramBatched.Tests\Ray.Serilog.Sinks.TelegramBatched.Tests.csproj", "{3A240BF1-ECA6-409F-8BDF-ED775DFACF38}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +81,10 @@ Global
 		{2FE32F8F-15B3-4A8B-A3AA-9E7B4C441E3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FE32F8F-15B3-4A8B-A3AA-9E7B4C441E3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2FE32F8F-15B3-4A8B-A3AA-9E7B4C441E3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A240BF1-ECA6-409F-8BDF-ED775DFACF38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A240BF1-ECA6-409F-8BDF-ED775DFACF38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A240BF1-ECA6-409F-8BDF-ED775DFACF38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A240BF1-ECA6-409F-8BDF-ED775DFACF38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,6 +101,7 @@ Global
 		{0946717F-2BFA-4CB8-910F-40662DBD214F} = {3A8C90A3-C98F-4DD3-B053-FE7C8CEA1BC9}
 		{AE3DC3B0-9C26-4194-9B62-CCE279D771F5} = {3A8C90A3-C98F-4DD3-B053-FE7C8CEA1BC9}
 		{2FE32F8F-15B3-4A8B-A3AA-9E7B4C441E3A} = {3A8C90A3-C98F-4DD3-B053-FE7C8CEA1BC9}
+		{3A240BF1-ECA6-409F-8BDF-ED775DFACF38} = {819AD12E-05EF-4DEC-BAB8-9AEAF59E5DBF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C58B3F26-D47C-4830-A24E-709613DD7687}

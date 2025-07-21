@@ -37,10 +37,5 @@ namespace Ray.Serilog.Sinks.ServerChanBatched
                 return new ServerChanApiClient(_scKey);
             }
         }
-
-        public override void Dispose()
-        {
-            //todo
-        }
     }
 }

@@ -28,10 +28,5 @@ namespace Ray.Serilog.Sinks.MicrosoftTeamsBatched
 
         protected override PushService PushService => new MicrosoftTeamsApiClient(
             webhook: _webhook);
-
-        public override void Dispose()
-        {
-            //todo
-        }
     }
 }

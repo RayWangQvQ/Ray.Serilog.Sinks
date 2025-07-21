@@ -191,6 +191,28 @@ namespace Ray.Serilog.Sinks.Batched
             return title;
         }
 
-        public abstract void Dispose();
+        public virtual void Dispose()
+        {
+            try
+            {
+                if (_queue == null) return;
+                
+                var remainingEvents = new Queue<LogEvent>();
+                    
+                while (_queue.TryDequeue(out LogEvent item))
+                {
+                    remainingEvents.Enqueue(item);
+                }
+                    
+                if (remainingEvents.Count > 0)
+                {
+                    EmitBatch(remainingEvents, "应用关闭推送");
+                }
+            }
+            catch (Exception ex)
+            {
+                SelfLog.WriteLine("Exception while disposing BatchedSink: {0}", ex.Message);
+            }
+        }
     }
 }

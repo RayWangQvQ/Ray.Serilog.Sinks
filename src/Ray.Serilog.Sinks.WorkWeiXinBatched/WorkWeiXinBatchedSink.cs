@@ -27,10 +27,5 @@ namespace Ray.Serilog.Sinks.WorkWeiXinBatched
         }
 
         protected override PushService PushService => new WorkWeiXinApiClient(_webHookUrl);
-
-        public override void Dispose()
-        {
-            //todo
-        }
     }
 }

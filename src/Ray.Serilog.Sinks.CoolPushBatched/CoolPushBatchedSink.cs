@@ -26,10 +26,5 @@ namespace Ray.Serilog.Sinks.CoolPushBatched
         }
 
         protected override PushService PushService => new CoolPushApiClient(_sKey);
-
-        public override void Dispose()
-        {
-            //todo
-        }
     }
 }

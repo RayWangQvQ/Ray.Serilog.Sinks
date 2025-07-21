@@ -50,10 +50,5 @@ namespace Ray.Serilog.Sinks.WorkWeiXinAppBatched
             _toUser,
             _toParty,
             _toTag);
-
-        public override void Dispose()
-        {
-            //todo
-        }
     }
 }

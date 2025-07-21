@@ -41,10 +41,5 @@ namespace Ray.Serilog.Sinks.PushPlusBatched
             _topic,
             channel: _channel,
             webhook: _webhook);
-
-        public override void Dispose()
-        {
-            //todo
-        }
     }
 }

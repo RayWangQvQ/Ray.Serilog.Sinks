@@ -36,10 +36,5 @@ namespace Ray.Serilog.Sinks.OtherApiBatched
         }
 
         protected override PushService PushService => new OtherApiClient(_api, _jsonTemplate, _placeholder);
-
-        public override void Dispose()
-        {
-            //todo
-        }
     }
 }
