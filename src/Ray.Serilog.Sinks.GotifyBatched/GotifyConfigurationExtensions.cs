@@ -1,9 +1,10 @@
 ﻿using Ray.Serilog.Sinks.Batched;
+using Ray.Serilog.Sinks.MicrosoftTeamsBatched;
 using Serilog;
 using Serilog.Configuration;
 using Serilog.Events;
 
-namespace Ray.Serilog.Sinks.MicrosoftTeamsBatched
+namespace Ray.Serilog.Sinks.GotifyBatched
 {
     public static class GotifyConfigurationExtensions
     {
