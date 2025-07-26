@@ -16,7 +16,6 @@ public class DingTalkApiClientTests
 
         // Assert
         client.Should().NotBeNull();
-        client.ClientName.Should().Be("钉钉机器人");
     }
 
     [Fact]
@@ -27,7 +26,6 @@ public class DingTalkApiClientTests
 
         // Assert
         client.Should().NotBeNull();
-        client.ClientName.Should().Be("钉钉机器人");
     }
 
     [Theory]

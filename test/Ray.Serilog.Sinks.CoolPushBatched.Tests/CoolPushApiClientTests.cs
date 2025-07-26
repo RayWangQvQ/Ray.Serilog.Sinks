@@ -14,6 +14,5 @@ public class CoolPushApiClientTests
 
         // Assert
         client.Should().NotBeNull();
-        client.ClientName.Should().Be("酷推");
     }
 }

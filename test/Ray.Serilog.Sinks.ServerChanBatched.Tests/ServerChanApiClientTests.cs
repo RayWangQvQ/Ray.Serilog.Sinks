@@ -14,7 +14,6 @@ public class ServerChanApiClientTests
 
         // Assert
         client.Should().NotBeNull();
-        client.ClientName.Should().Be("Server酱");
     }
 
     [Fact]

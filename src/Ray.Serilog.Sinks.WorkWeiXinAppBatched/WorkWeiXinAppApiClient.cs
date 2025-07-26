@@ -40,11 +40,11 @@ public class WorkWeiXinAppApiClient : PushService
         _apiUrl = new Uri($"https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={token}");
     }
 
-    public override string ClientName => "WorkWeiXinApp";
+    protected override string ClientName => "WorkWeiXinApp";
 
     protected override string NewLineStr => "\n";
 
-    public override HttpResponseMessage DoSend()
+    protected override HttpResponseMessage DoSend()
     {
         var json = new
         {

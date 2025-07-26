@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Text;
+﻿using System.Text;
 using Ray.Serilog.Sinks.Batched;
 
 namespace Ray.Serilog.Sinks.WorkWeiXinBatched;
@@ -17,7 +15,7 @@ public class WorkWeiXinApiClient : PushService
         _apiUrl = new Uri(webHookUrl);
     }
 
-    public override string ClientName => "企业微信机器人";
+    protected override string ClientName => "企业微信机器人";
 
     /// <summary>
     /// 换行符
@@ -34,7 +32,7 @@ public class WorkWeiXinApiClient : PushService
         base.BuildMsg();
     }
 
-    public override HttpResponseMessage DoSend()
+    protected override HttpResponseMessage DoSend()
     {
         var json = new
         {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using Ray.Serilog.Sinks.Batched;
 
@@ -25,7 +23,7 @@ public class DingTalkApiClient : PushService
         }
     }
 
-    public override string ClientName => "钉钉机器人";
+    protected override string ClientName => "钉钉机器人";
 
     /// <summary>
     /// <br/>换行无效
@@ -41,7 +39,7 @@ public class DingTalkApiClient : PushService
         base.BuildMsg();
     }
 
-    public override HttpResponseMessage DoSend()
+    protected override HttpResponseMessage DoSend()
     {
         var json = new
         {

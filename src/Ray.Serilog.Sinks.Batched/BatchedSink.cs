@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using Serilog.Core;
 using Serilog.Debugging;
 using Serilog.Events;
@@ -31,8 +27,8 @@ public abstract class BatchedSink : ILogEventSink, IDisposable
     protected BatchedSink(
         Predicate<LogEvent> predicate,
         bool sendBatchesAsOneMessages,
-        string outputTemplate = "{Message:lj}{NewLine}{Exception}",
-        IFormatProvider formatProvider = null,
+        string? outputTemplate = "{Message:lj}{NewLine}{Exception}",
+        IFormatProvider? formatProvider = null,
         LogEventLevel minimumLogEventLevel = LogEventLevel.Verbose
     )
     {

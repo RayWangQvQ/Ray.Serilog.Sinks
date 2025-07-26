@@ -15,7 +15,6 @@ public class WorkWeiXinApiClientTests
 
         // Assert
         client.Should().NotBeNull();
-        client.ClientName.Should().Be("企业微信机器人");
     }
 
     [Theory]

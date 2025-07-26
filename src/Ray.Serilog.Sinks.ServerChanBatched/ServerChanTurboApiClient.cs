@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using Ray.Serilog.Sinks.Batched;
+﻿using Ray.Serilog.Sinks.Batched;
 
 namespace Ray.Serilog.Sinks.ServerChanBatched;
 
@@ -19,7 +16,7 @@ public class ServerChanTurboApiClient : PushService
         _apiUrl = new Uri($"{Host}/{scKey}.send");
     }
 
-    public override string ClientName => "Server酱Turbo版";
+    protected override string ClientName => "Server酱Turbo版";
 
     /// <summary>
     /// 需要两个才可以换行
@@ -28,7 +25,7 @@ public class ServerChanTurboApiClient : PushService
     /// </summary>
     protected override string NewLineStr => Environment.NewLine + Environment.NewLine;
 
-    public override HttpResponseMessage DoSend()
+    protected override HttpResponseMessage DoSend()
     {
         var dic = new Dictionary<string, string>
         {

@@ -1,7 +1,9 @@
 <Project>
   <PropertyGroup>
-		<Version>0.0.8</Version>
+		<Version>0.0.9</Version>
 		<Authors>Ray</Authors>
 		<Company>Ray</Company>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 </Project>

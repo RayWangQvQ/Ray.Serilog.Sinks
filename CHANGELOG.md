@@ -1,3 +1,5 @@
+## 0.0.9
+- Enable nullable
 ## 0.0.8
 - Upgrade pkgs
 ## 0.0.7

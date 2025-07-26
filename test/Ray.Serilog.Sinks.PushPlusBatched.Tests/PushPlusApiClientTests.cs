@@ -14,7 +14,6 @@ public class PushPlusApiClientTests
 
         // Assert
         client.Should().NotBeNull();
-        client.ClientName.Should().Be("PushPlus");
     }
 
     [Fact]

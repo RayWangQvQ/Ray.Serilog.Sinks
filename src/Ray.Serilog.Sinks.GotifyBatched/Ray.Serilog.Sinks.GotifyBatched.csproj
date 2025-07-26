@@ -4,7 +4,6 @@
 
 	<PropertyGroup>
     <TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
-		<ImplicitUsings>enable</ImplicitUsings>
 		<AssemblyName>Ray.Serilog.Sinks.GotifyBatched</AssemblyName>
 		<PackageId>Ray.Serilog.Sinks.GotifyBatched</PackageId>
 	</PropertyGroup>

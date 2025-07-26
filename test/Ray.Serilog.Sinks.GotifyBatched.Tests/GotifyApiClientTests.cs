@@ -15,6 +15,5 @@ public class GotifyApiClientTests
 
         // Assert
         client.Should().NotBeNull();
-        client.ClientName.Should().Be("Gotify");
     }
 }

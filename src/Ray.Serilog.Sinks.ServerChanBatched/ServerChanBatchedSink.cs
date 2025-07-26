@@ -1,5 +1,4 @@
-﻿using System;
-using Ray.Serilog.Sinks.Batched;
+﻿using Ray.Serilog.Sinks.Batched;
 using Serilog.Events;
 
 namespace Ray.Serilog.Sinks.ServerChanBatched;

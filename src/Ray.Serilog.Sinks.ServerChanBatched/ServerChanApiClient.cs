@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using Ray.Serilog.Sinks.Batched;
+﻿using Ray.Serilog.Sinks.Batched;
 
 namespace Ray.Serilog.Sinks.ServerChanBatched;
 
@@ -19,7 +16,7 @@ public class ServerChanApiClient : PushService
         _apiUrl = new Uri($"{Host}/{scKey}.send");
     }
 
-    public override string ClientName => "Server酱";
+    protected override string ClientName => "Server酱";
 
     /// <summary>
     /// 需要两个才可以换行
@@ -36,7 +33,7 @@ public class ServerChanApiClient : PushService
         base.BuildMsg();
     }
 
-    public override HttpResponseMessage DoSend()
+    protected override HttpResponseMessage DoSend()
     {
         var dic = new Dictionary<string, string> { { "text", Title }, { "desp", Msg } };
         var content = new FormUrlEncodedContent(dic);
