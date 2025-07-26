@@ -27,8 +27,7 @@ public abstract class BatchedSink : ILogEventSink, IDisposable
         IFormatProvider formatProvider,
         LogEventLevel minimumLogEventLevel
     )
-        : this(predicate, sendBatchesAsOneMessages, null, formatProvider, minimumLogEventLevel)
-    { }
+        : this(predicate, sendBatchesAsOneMessages, null, formatProvider, minimumLogEventLevel) { }
 
     public BatchedSink(
         Predicate<LogEvent> predicate,

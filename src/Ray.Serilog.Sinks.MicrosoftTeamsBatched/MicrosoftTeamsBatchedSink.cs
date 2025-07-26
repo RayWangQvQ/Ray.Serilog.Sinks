@@ -34,6 +34,5 @@ public class MicrosoftTeamsBatchedSink : BatchedSink
         base.Emit(logEvent);
     }
 
-    protected override PushService PushService =>
-        new MicrosoftTeamsApiClient(webhook: _webhook);
+    protected override PushService PushService => new MicrosoftTeamsApiClient(webhook: _webhook);
 }

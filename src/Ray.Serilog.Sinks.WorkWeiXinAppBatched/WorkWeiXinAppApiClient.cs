@@ -39,9 +39,7 @@ public class WorkWeiXinAppApiClient : PushService
 
         // token
         var token = GetAccessToken(corpid, secret);
-        _apiUrl = new Uri(
-            $"https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={token}"
-        );
+        _apiUrl = new Uri($"https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={token}");
     }
 
     public override string ClientName => "WorkWeiXinApp";
