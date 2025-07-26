@@ -42,7 +42,7 @@ public class PushServiceTests
     {
         protected override string ClientName => "Test Push Service";
 
-        protected override HttpResponseMessage DoSend()
+        protected override HttpResponseMessage DoSend(string message, string title)
         {
             return new HttpResponseMessage(System.Net.HttpStatusCode.OK);
         }

@@ -10,7 +10,7 @@ public class WorkWeiXinAppApiClient : PushService
     // https://github.com/JeffreySu/WeiXinMPSDK
 
     private readonly Uri _apiUrl;
-    private readonly HttpClient _httpClient = new HttpClient();
+    private readonly HttpClient _httpClient = new();
     private readonly string _corpId;
     private readonly string _agentId;
     private readonly string _secret;
@@ -42,9 +42,9 @@ public class WorkWeiXinAppApiClient : PushService
 
     protected override string ClientName => "WorkWeiXinApp";
 
-    protected override string NewLineStr => "\n";
+    protected override string? NewLineStr => "\n";
 
-    protected override HttpResponseMessage DoSend()
+    protected override HttpResponseMessage DoSend(string message, string title = "")
     {
         var json = new
         {
@@ -53,7 +53,7 @@ public class WorkWeiXinAppApiClient : PushService
             totag = _toTag,
             agentid = _agentId,
             msgtype = "text",
-            text = new { content = Msg },
+            text = new { content = message },
         }.ToJsonStr();
 
         var content = new StringContent(json, Encoding.UTF8, "application/json");

@@ -17,19 +17,22 @@ public class CoolPushApiClient : PushService
 
     protected override string ClientName => "酷推";
 
-    protected override string NewLineStr => Environment.NewLine + Environment.NewLine;
+    protected override string? NewLineStr => Environment.NewLine + Environment.NewLine;
 
-    public override void BuildMsg()
+    protected override string BuildMsg(string message, string title = "")
     {
         //附加标题
-        Msg = Title + Environment.NewLine + Msg;
+        var msg = title + Environment.NewLine + message;
 
-        base.BuildMsg();
+        if (!string.IsNullOrEmpty(NewLineStr))
+            msg = msg.Replace(Environment.NewLine, NewLineStr);
+
+        return msg;
     }
 
-    protected override HttpResponseMessage DoSend()
+    protected override HttpResponseMessage DoSend(string message, string title = "")
     {
-        var content = new StringContent(Msg, Encoding.UTF8, "application/json");
+        var content = new StringContent(message, Encoding.UTF8, "application/json");
 
         var response = _httpClient.PostAsync(_apiUrl, content).GetAwaiter().GetResult();
         return response;

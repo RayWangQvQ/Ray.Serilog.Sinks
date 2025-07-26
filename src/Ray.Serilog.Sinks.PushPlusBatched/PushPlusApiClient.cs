@@ -12,13 +12,13 @@ public class PushPlusApiClient : PushService
     private readonly Uri _apiUrl;
     private readonly HttpClient _httpClient = new HttpClient();
     private readonly string _token;
-    private readonly string _topic;
+    private readonly string? _topic;
     private readonly string _channel;
     private readonly string _webhook;
 
     public PushPlusApiClient(
         string token,
-        string topic = null,
+        string? topic = null,
         string channel = "",
         string webhook = ""
     )
@@ -41,11 +41,7 @@ public class PushPlusApiClient : PushService
             if (_channel.IsNullOrEmpty())
                 return re;
 
-            bool suc = Enum.TryParse<PushPlusChannelType>(
-                _channel,
-                true,
-                out PushPlusChannelType channel
-            );
+            bool suc = Enum.TryParse(_channel, true, out PushPlusChannelType channel);
             if (suc)
                 re = channel;
 
@@ -55,7 +51,7 @@ public class PushPlusApiClient : PushService
 
     protected override string NewLineStr => "<br/>";
 
-    protected override HttpResponseMessage DoSend()
+    protected override HttpResponseMessage DoSend(string message, string title = "")
     {
         var json = new
         {
@@ -65,8 +61,8 @@ public class PushPlusApiClient : PushService
             channel = this.ChannelType.ToString(),
             webhook = _webhook,
 
-            title = Title,
-            content = Msg,
+            title,
+            content = message,
 
             template = PushPlusMsgType.html.ToString(),
         }.ToJsonStr();

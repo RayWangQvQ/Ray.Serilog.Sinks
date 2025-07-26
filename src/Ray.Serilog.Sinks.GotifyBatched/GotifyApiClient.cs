@@ -9,7 +9,7 @@ public class GotifyApiClient : PushService
     //https://gotify.net/docs
 
     private readonly Uri _apiUrl;
-    private readonly HttpClient _httpClient = new HttpClient();
+    private readonly HttpClient _httpClient = new();
     private readonly string _token;
 
     public GotifyApiClient(string host, string token)
@@ -20,14 +20,14 @@ public class GotifyApiClient : PushService
 
     protected override string ClientName => "Gotify";
 
-    protected override string NewLineStr => "\n";
+    protected override string? NewLineStr => "\n";
 
-    protected override HttpResponseMessage DoSend()
+    protected override HttpResponseMessage DoSend(string message, string title = "")
     {
         var json = new
         {
-            title = Title,
-            message = Msg,
+            title = title,
+            message = message,
             extras = "{\"extras\":{\"client::display\":{\"contentType\":\"text/markdown\"}}}".JsonDeserialize<JObject>(),
         }.ToJsonStr();
 
