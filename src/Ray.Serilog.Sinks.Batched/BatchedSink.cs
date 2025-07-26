@@ -99,29 +99,26 @@ public abstract class BatchedSink : ILogEventSink, IDisposable
         }
     }
 
-    protected abstract PushService PushService { get; }
+    protected abstract IPushService PushService { get; }
 
     protected virtual void PushMessage(string message, string title = "推送")
     {
         //SelfLog.WriteLine($"Trying to send message: '{message}'.");
         var result = PushService.PushMessage(message, title);
-        if (result != null)
+        SelfLog.WriteLine($"Response status: {result.StatusCode}.");
+        try
         {
-            SelfLog.WriteLine($"Response status: {result.StatusCode}.");
-            try
-            {
-                var content = result
-                    .Content.ReadAsStringAsync()
-                    .GetAwaiter()
-                    .GetResult()
-                    .Replace("{", "{{")
-                    .Replace("}", "}}");
-                SelfLog.WriteLine($"Response content: {content}.{Environment.NewLine}");
-            }
-            catch (Exception e)
-            {
-                SelfLog.WriteLine(e.Message + Environment.NewLine);
-            }
+            var content = result
+                .Content.ReadAsStringAsync()
+                .GetAwaiter()
+                .GetResult()
+                .Replace("{", "{{")
+                .Replace("}", "}}");
+            SelfLog.WriteLine($"Response content: {content}.{Environment.NewLine}");
+        }
+        catch (Exception e)
+        {
+            SelfLog.WriteLine(e.Message + Environment.NewLine);
         }
     }
 

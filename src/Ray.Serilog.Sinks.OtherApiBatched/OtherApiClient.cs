@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net.Http;
+using System.Text;
 using Ray.Serilog.Sinks.Batched;
 
 namespace Ray.Serilog.Sinks.OtherApiBatched;
@@ -6,30 +7,30 @@ namespace Ray.Serilog.Sinks.OtherApiBatched;
 public class OtherApiClient : PushService
 {
     private readonly Uri _apiUri;
-    private string _json;
+    private readonly string _jsonTemplate;
     private readonly string _placeholder;
 
-    private readonly HttpClient _httpClient = new HttpClient();
+    private readonly HttpClient _httpClient = new();
 
-    public OtherApiClient(string apiUrl, string json, string placeholder)
+    public OtherApiClient(string apiUrl, string jsonTemplate, string placeholder)
     {
-        _json = json;
+        _jsonTemplate = jsonTemplate;
         _placeholder = placeholder;
         _apiUri = new Uri(apiUrl);
     }
 
     protected override string ClientName => "自定义";
 
-    public override void BuildMsg()
+    protected override string BuildMsg(string message, string title = "")
     {
-        base.BuildMsg();
-        _json = _json.Replace(_placeholder, Msg.ToJsonStr());
+        var msg = base.BuildMsg(message, title);
+        return _jsonTemplate.Replace(_placeholder, msg.ToJsonStr());
     }
 
-    protected override HttpResponseMessage DoSend()
+    protected override HttpResponseMessage DoSend(string message, string title = "")
     {
-        var content = new StringContent(_json, Encoding.UTF8, "application/json");
-        var response = this._httpClient.PostAsync(_apiUri, content).GetAwaiter().GetResult();
+        var content = new StringContent(message, Encoding.UTF8, "application/json");
+        var response = _httpClient.PostAsync(_apiUri, content).GetAwaiter().GetResult();
         return response;
     }
 }

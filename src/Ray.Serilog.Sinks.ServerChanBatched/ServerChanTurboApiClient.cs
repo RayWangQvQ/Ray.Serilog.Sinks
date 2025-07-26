@@ -1,4 +1,6 @@
-﻿using Ray.Serilog.Sinks.Batched;
+﻿using System.Collections.Generic;
+using System.Net.Http;
+using Ray.Serilog.Sinks.Batched;
 
 namespace Ray.Serilog.Sinks.ServerChanBatched;
 
@@ -9,7 +11,7 @@ public class ServerChanTurboApiClient : PushService
     private const string Host = "https://sctapi.ftqq.com";
 
     private readonly Uri _apiUrl;
-    private readonly HttpClient _httpClient = new HttpClient();
+    private readonly HttpClient _httpClient = new();
 
     public ServerChanTurboApiClient(string scKey)
     {
@@ -23,14 +25,14 @@ public class ServerChanTurboApiClient : PushService
     /// 只能换单行
     /// <br/>无效
     /// </summary>
-    protected override string NewLineStr => Environment.NewLine + Environment.NewLine;
+    protected override string? NewLineStr => Environment.NewLine + Environment.NewLine;
 
-    protected override HttpResponseMessage DoSend()
+    protected override HttpResponseMessage DoSend(string message, string title = "")
     {
         var dic = new Dictionary<string, string>
         {
-            { "title", Title }, //标题必填
-            { "desp", Msg },
+            { "title", title }, //标题必填
+            { "desp", message },
         };
         var content = new FormUrlEncodedContent(dic);
         var response = _httpClient.PostAsync(_apiUrl, content).GetAwaiter().GetResult();

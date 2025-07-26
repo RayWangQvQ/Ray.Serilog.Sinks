@@ -21,7 +21,7 @@ public class TelegramApiClient : PushService
     /// <summary>
     /// The HTTP client.
     /// </summary>
-    private readonly HttpClient _httpClient = new HttpClient();
+    private readonly HttpClient _httpClient = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TelegramApiClient"/> class.
@@ -45,7 +45,7 @@ public class TelegramApiClient : PushService
         _chatId = chatId;
         _proxy = proxy;
 
-        this._apiUrl = new Uri($"{TelegramBotApiUrl}{botToken}/sendMessage");
+        _apiUrl = new Uri($"{TelegramBotApiUrl}{botToken}/sendMessage");
 
         if (!proxy.IsNullOrEmpty())
         {
@@ -58,19 +58,19 @@ public class TelegramApiClient : PushService
             _httpClient = new HttpClient(proxyHttpClientHandler);
         }
 
-        this._httpClient.Timeout = TimeSpan.FromSeconds(timeoutSeconds);
+        _httpClient.Timeout = TimeSpan.FromSeconds(timeoutSeconds);
     }
 
     protected override string ClientName => "Telegram机器人";
 
-    protected override HttpResponseMessage DoSend()
+    protected override HttpResponseMessage DoSend(string message, string title = "")
     {
         SelfLog.WriteLine($"使用代理：{!_proxy.IsNullOrEmpty()}");
 
         var json = new
         {
             chat_id = _chatId,
-            text = Msg,
+            text = message,
             parse_mode = TeleMsgType.HTML.ToString(),
             disable_web_page_preview = true,
         }.ToJsonStr();
@@ -79,12 +79,11 @@ public class TelegramApiClient : PushService
         return response;
     }
 
-    public override void BuildMsg()
+    protected override string BuildMsg(string message, string title = "")
     {
-        //附加标题
-        Msg = $"<b>{Title}</b>{Environment.NewLine}{Environment.NewLine}{Msg}";
+        var re = $"<b>{title}</b>{Environment.NewLine}{Environment.NewLine}{message}";
 
-        base.BuildMsg();
+        return base.BuildMsg(re, title);
     }
 
     private WebProxy GetWebProxy(string proxyAddress)

@@ -1,4 +1,6 @@
-﻿using Ray.Serilog.Sinks.Batched;
+﻿using System.Collections.Generic;
+using System.Net.Http;
+using Ray.Serilog.Sinks.Batched;
 
 namespace Ray.Serilog.Sinks.ServerChanBatched;
 
@@ -9,7 +11,7 @@ public class ServerChanApiClient : PushService
     private const string Host = "http://sc.ftqq.com";
 
     private readonly Uri _apiUrl;
-    private readonly HttpClient _httpClient = new HttpClient();
+    private readonly HttpClient _httpClient = new();
 
     public ServerChanApiClient(string scKey)
     {
@@ -23,19 +25,18 @@ public class ServerChanApiClient : PushService
     /// 只能换单行
     /// <br/>无效
     /// </summary>
-    protected override string NewLineStr => Environment.NewLine + Environment.NewLine;
+    protected override string? NewLineStr => Environment.NewLine + Environment.NewLine;
 
-    public override void BuildMsg()
+    protected override string BuildMsg(string message, string title = "")
     {
-        Msg +=
-            $"{Environment.NewLine}### 检测到当前为老版Server酱,即将失效,建议更换其他推送方式或更新至Server酱Turbo版";
-
-        base.BuildMsg();
+        var msg = base.BuildMsg(message, title);
+        msg += $"{Environment.NewLine}### 检测到当前为老版Server酱,即将失效,建议更换其他推送方式或更新至Server酱Turbo版";
+        return msg;
     }
 
-    protected override HttpResponseMessage DoSend()
+    protected override HttpResponseMessage DoSend(string message, string title = "")
     {
-        var dic = new Dictionary<string, string> { { "text", Title }, { "desp", Msg } };
+        var dic = new Dictionary<string, string> { { "text", title }, { "desp", message } };
         var content = new FormUrlEncodedContent(dic);
         var response = _httpClient.PostAsync(_apiUrl, content).GetAwaiter().GetResult();
         return response;

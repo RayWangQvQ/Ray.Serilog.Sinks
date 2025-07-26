@@ -8,7 +8,7 @@ public class WorkWeiXinApiClient : PushService
     //https://work.weixin.qq.com/api/doc/90000/90136/91770
 
     private readonly Uri _apiUrl;
-    private readonly HttpClient _httpClient = new HttpClient();
+    private readonly HttpClient _httpClient = new();
 
     public WorkWeiXinApiClient(string webHookUrl)
     {
@@ -24,20 +24,23 @@ public class WorkWeiXinApiClient : PushService
     /// </summary>
     protected override string NewLineStr => "\r\n";
 
-    public override void BuildMsg()
+    protected override string BuildMsg(string message, string title = "")
     {
         //附加标题
-        Msg = $"## {Title} {Environment.NewLine}{Environment.NewLine}{Msg}";
+        var msg = $"## {title} {Environment.NewLine}{Environment.NewLine}{message}";
 
-        base.BuildMsg();
+        if (!string.IsNullOrEmpty(NewLineStr))
+            msg = msg.Replace(Environment.NewLine, NewLineStr);
+
+        return msg;
     }
 
-    protected override HttpResponseMessage DoSend()
+    protected override HttpResponseMessage DoSend(string message, string title = "")
     {
         var json = new
         {
             msgtype = WorkWeiXinMsgType.markdown.ToString(),
-            markdown = new { content = Msg },
+            markdown = new { content = message },
         }.ToJsonStr();
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
