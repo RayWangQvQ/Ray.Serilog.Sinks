@@ -250,8 +250,6 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
         {
             if (_disposed)
                 return;
-
-            _disposed = true;
         }
 
         try
@@ -265,5 +263,7 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
 
         BatchSinkManager.UnregisterSink(this);
         _flushSemaphore.Dispose();
+
+        _disposed = true;
     }
 }
