@@ -9,7 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Ray.Infrastructure" Version="0.0.4" />
+		<PackageReference Include="Ray.Infrastructure" Version="0.0.26" />
 		<PackageReference Include="Volo.Abp.Core" Version="7.1.0" />
 	</ItemGroup>
 
