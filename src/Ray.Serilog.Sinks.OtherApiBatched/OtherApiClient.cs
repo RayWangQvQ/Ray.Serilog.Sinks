@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using Ray.Serilog.Sinks.Batched;
 
 namespace Ray.Serilog.Sinks.OtherApiBatched;

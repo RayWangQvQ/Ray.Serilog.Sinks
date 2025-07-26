@@ -1,3 +1,5 @@
+## 0.0.6
+- Refactor: Clean using directives
 ## 0.0.5
 - Refactor: Change namespace style to file-scoped
 ## 0.0.4

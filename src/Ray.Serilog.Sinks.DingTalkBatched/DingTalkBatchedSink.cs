@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Ray.Serilog.Sinks.Batched;
 using Serilog.Events;
 
