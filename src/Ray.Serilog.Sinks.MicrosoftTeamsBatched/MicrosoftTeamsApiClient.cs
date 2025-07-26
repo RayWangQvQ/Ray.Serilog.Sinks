@@ -1,32 +1,33 @@
-﻿using System.Text;
+﻿using System;
+using System.Net.Http;
+using System.Text;
 using Ray.Serilog.Sinks.Batched;
 
-namespace Ray.Serilog.Sinks.MicrosoftTeamsBatched
+namespace Ray.Serilog.Sinks.MicrosoftTeamsBatched;
+
+public class MicrosoftTeamsApiClient : PushService
 {
-    public class MicrosoftTeamsApiClient : PushService
+    //https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook
+
+    private readonly Uri _apiUrl;
+    private readonly HttpClient _httpClient = new HttpClient();
+
+    public MicrosoftTeamsApiClient(string webhook)
     {
-        //https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook
+        _apiUrl = new Uri(webhook);
+    }
 
-        private readonly Uri _apiUrl;
-        private readonly HttpClient _httpClient = new HttpClient();
+    public override string ClientName => "MicrosoftTeams";
 
-        public MicrosoftTeamsApiClient(string webhook)
-        {
-            _apiUrl = new Uri(webhook);
-        }
+    protected override string NewLineStr => "<br/>";
 
-        public override string ClientName => "MicrosoftTeams";
+    public override HttpResponseMessage DoSend()
+    {
+        var json = new { text = Msg }.ToJsonStr();
 
-        protected override string NewLineStr => "<br/>";
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        public override HttpResponseMessage DoSend()
-        {
-            var json = new { text = Msg }.ToJsonStr();
-
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = _httpClient.PostAsync(_apiUrl, content).GetAwaiter().GetResult();
-            return response;
-        }
+        var response = _httpClient.PostAsync(_apiUrl, content).GetAwaiter().GetResult();
+        return response;
     }
 }

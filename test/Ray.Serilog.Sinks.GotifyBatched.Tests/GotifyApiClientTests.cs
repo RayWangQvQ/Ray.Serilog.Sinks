@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Ray.Serilog.Sinks.MicrosoftTeamsBatched;
 
 namespace Ray.Serilog.Sinks.GotifyBatched.Tests;
 
