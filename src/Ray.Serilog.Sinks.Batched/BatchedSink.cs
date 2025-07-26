@@ -91,7 +91,7 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
         }
     }
 
-    public async Task FlushAsync()
+    public async Task FlushAsync(string title = "")
     {
         if (_disposed)
             return;
@@ -109,7 +109,7 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
             if (batch.Count == 0)
                 return;
 
-            await EmitBatchAsync(batch);
+            await EmitBatchAsync(batch, title);
         }
         finally
         {

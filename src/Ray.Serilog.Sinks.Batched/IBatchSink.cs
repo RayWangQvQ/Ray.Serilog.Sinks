@@ -6,7 +6,7 @@ public interface IBatchSink
 {
     void Emit(LogEvent logEvent);
 
-    Task FlushAsync();
+    Task FlushAsync(string title = "");
 
     bool IsDisposed { get; }
 }
