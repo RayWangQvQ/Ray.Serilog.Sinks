@@ -2,6 +2,7 @@
 using Serilog;
 using Serilog.Configuration;
 using Serilog.Events;
+using System.Globalization;
 
 namespace Ray.Serilog.Sinks.WorkWeiXinBatched;
 
@@ -10,22 +11,25 @@ public static class WorkWeiXinLoggerConfigurationExtensions
     public static LoggerConfiguration WorkWeiXinBatched(
         this LoggerSinkConfiguration loggerSinkConfiguration,
         string webHookUrl,
-        string containsTrigger = Constants.DefaultContainsTrigger,
         bool sendBatchesAsOneMessages = true,
-        IFormatProvider formatProvider = null,
+        int batchSizeLimit = int.MaxValue,
+        string outputTemplate = Constants.DefaultOutputTemplate,
+        IFormatProvider? formatProvider = null,
         LogEventLevel restrictedToMinimumLevel = LogEventLevel.Verbose
     )
     {
-        if (containsTrigger.IsNullOrEmpty())
-            containsTrigger = Constants.DefaultContainsTrigger;
-        Predicate<LogEvent> predicate = x => x.MessageTemplate.Text.Contains(containsTrigger);
+        if (loggerSinkConfiguration == null)
+            throw new ArgumentNullException(nameof(loggerSinkConfiguration));
+        if (outputTemplate == null)
+            throw new ArgumentNullException(nameof(outputTemplate));
 
         return loggerSinkConfiguration.Sink(
             new WorkWeiXinBatchedSink(
                 webHookUrl,
-                predicate,
                 sendBatchesAsOneMessages,
-                formatProvider,
+                batchSizeLimit,
+                outputTemplate,
+                formatProvider ?? CultureInfo.InvariantCulture,
                 restrictedToMinimumLevel
             ),
             restrictedToMinimumLevel

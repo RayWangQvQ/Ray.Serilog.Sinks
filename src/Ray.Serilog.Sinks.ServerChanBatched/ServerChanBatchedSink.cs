@@ -11,12 +11,19 @@ public class ServerChanBatchedSink : BatchedSink
     public ServerChanBatchedSink(
         string scKey,
         string turboScKey,
-        Predicate<LogEvent> predicate,
         bool sendBatchesAsOneMessages,
+        int batchSizeLimit,
+        string outputTemplate,
         IFormatProvider formatProvider,
         LogEventLevel minimumLogEventLevel
     )
-        : base(predicate, sendBatchesAsOneMessages, formatProvider, minimumLogEventLevel)
+        : base(
+            sendBatchesAsOneMessages,
+            batchSizeLimit,
+            outputTemplate: outputTemplate,
+            formatProvider: formatProvider,
+            minimumLogEventLevel: minimumLogEventLevel
+        )
     {
         _scKey = scKey;
         _turboScKey = turboScKey;

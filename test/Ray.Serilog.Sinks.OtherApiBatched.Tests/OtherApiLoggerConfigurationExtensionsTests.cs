@@ -37,10 +37,10 @@ public class OtherApiLoggerConfigurationExtensionsTests
             api: TestApiUrl,
             bodyJsonTemplate: "{\"message\": \"{{message}}\"}",
             placeholder: "{{message}}",
-            restrictedToMinimumLevel: LogEventLevel.Warning,
-            containsTrigger: "test",
             sendBatchesAsOneMessages: true,
-            formatProvider: null
+            batchSizeLimit: 50,
+            formatProvider: System.Globalization.CultureInfo.InvariantCulture,
+            restrictedToMinimumLevel: LogEventLevel.Warning
         );
 
         // Assert

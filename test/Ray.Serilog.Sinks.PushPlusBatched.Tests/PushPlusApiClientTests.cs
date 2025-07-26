@@ -17,15 +17,15 @@ public class PushPlusApiClientTests
     }
 
     [Fact]
-    public void PushMessage_WithValidParameters_ShouldReturnResponse()
+    public async Task PushMessageAsync_WithValidParameters_ShouldReturnResponse()
     {
         // Arrange
         var client = new PushPlusApiClient(TestToken);
 
         // Act
-        var act = () => client.PushMessage("Test Content", "Test Title");
+        Func<Task> act = async () => await client.PushMessageAsync("Test Content", "Test Title");
 
         // Assert
-        act.Should().NotThrow();
+        await act.Should().NotThrowAsync();
     }
 }

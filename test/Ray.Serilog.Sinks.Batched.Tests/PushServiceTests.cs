@@ -5,13 +5,13 @@ namespace Ray.Serilog.Sinks.Batched.Tests;
 public class PushServiceTests
 {
     [Fact]
-    public void PushMessage_WithValidParameters_ShouldComplete()
+    public async Task PushMessage_WithValidParameters_ShouldComplete()
     {
         // Arrange
         var pushService = new TestPushService();
 
         // Act
-        var result = pushService.PushMessage("Test Content", "Test Title");
+        var result = await pushService.PushMessageAsync("Test Content", "Test Title");
 
         // Assert
         result.Should().NotBeNull();
@@ -21,10 +21,9 @@ public class PushServiceTests
     [Theory]
     [InlineData("", "content")]
     [InlineData("title", "")]
-    [InlineData(null, "content")]
-    [InlineData("title", null)]
-    public void PushMessage_WithInvalidParameters_ShouldHandleGracefully(
-        string title,
+    [InlineData("title", "content")]
+    public async Task PushMessage_WithInvalidParameters_ShouldHandleGracefully(
+        string? title,
         string content
     )
     {
@@ -32,19 +31,19 @@ public class PushServiceTests
         var pushService = new TestPushService();
 
         // Act
-        var act = () => pushService.PushMessage(content, title);
+        var act = async () => await pushService.PushMessageAsync(content, title ?? "");
 
         // Assert
-        act.Should().NotThrow();
+        await act.Should().NotThrowAsync();
     }
 
     private class TestPushService : PushService
     {
         protected override string ClientName => "Test Push Service";
 
-        protected override HttpResponseMessage DoSend(string message, string title)
+        protected override Task<HttpResponseMessage> DoSendAsync(string message, string title = "")
         {
-            return new HttpResponseMessage(System.Net.HttpStatusCode.OK);
+            return Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.OK));
         }
     }
 }

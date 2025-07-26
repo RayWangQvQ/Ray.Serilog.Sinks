@@ -13,12 +13,12 @@ public class OtherApiBatchedSink : BatchedSink
         string api,
         string jsonTemplate,
         string placeholder,
-        Predicate<LogEvent> predicate,
         bool sendBatchesAsOneMessages,
+        int batchSizeLimit,
         IFormatProvider formatProvider,
         LogEventLevel minimumLogEventLevel
     )
-        : base(predicate, sendBatchesAsOneMessages, formatProvider, minimumLogEventLevel)
+        : base(sendBatchesAsOneMessages, batchSizeLimit, null, formatProvider, minimumLogEventLevel)
     {
         _api = api;
         _jsonTemplate = jsonTemplate;

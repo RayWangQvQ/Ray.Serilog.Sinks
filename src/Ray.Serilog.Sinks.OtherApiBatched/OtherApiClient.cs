@@ -26,10 +26,10 @@ public class OtherApiClient : PushService
         return _jsonTemplate.Replace(_placeholder, msg.ToJsonStr());
     }
 
-    protected override HttpResponseMessage DoSend(string message, string title = "")
+    protected override async Task<HttpResponseMessage> DoSendAsync(string message, string title = "")
     {
         var content = new StringContent(message, Encoding.UTF8, "application/json");
-        var response = _httpClient.PostAsync(_apiUri, content).GetAwaiter().GetResult();
+        var response = await _httpClient.PostAsync(_apiUri, content);
         return response;
     }
 }

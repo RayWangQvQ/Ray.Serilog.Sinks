@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Serilog;
 using Serilog.Events;
 
 namespace Ray.Serilog.Sinks.PushPlusBatched.Tests;
@@ -17,10 +16,10 @@ public class PushPlusBatchedSinkTests
             "",
             "",
             "",
-            x => true,
             true,
-            "",
-            null,
+            100,
+            "{Message:lj}{NewLine}{Exception}",
+            System.Globalization.CultureInfo.InvariantCulture,
             LogEventLevel.Information
         );
 

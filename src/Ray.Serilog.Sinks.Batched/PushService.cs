@@ -8,13 +8,13 @@ public abstract class PushService : IPushService
 
     protected virtual string? NewLineStr { get; }
 
-    public virtual HttpResponseMessage PushMessage(string message, string title = "")
+    public virtual async Task<HttpResponseMessage> PushMessageAsync(string message, string title = "")
     {
         SelfLog.WriteLine($"开始推送到:{ClientName}");
 
         message = BuildMsg(message);
 
-        return DoSend(message, title);
+        return await DoSendAsync(message, title);
     }
 
     protected virtual string BuildMsg(string message, string title = "")
@@ -24,5 +24,5 @@ public abstract class PushService : IPushService
         return message;
     }
 
-    protected abstract HttpResponseMessage DoSend(string message, string title = "");
+    protected abstract Task<HttpResponseMessage> DoSendAsync(string message, string title = "");
 }

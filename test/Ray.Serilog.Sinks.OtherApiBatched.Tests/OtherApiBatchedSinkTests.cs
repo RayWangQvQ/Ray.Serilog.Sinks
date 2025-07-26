@@ -16,9 +16,9 @@ public class OtherApiBatchedSinkTests
             TestApiUrl,
             "{\"message\": \"{{message}}\"}",
             "{{message}}",
-            x => true,
             true,
-            null,
+            100,
+            System.Globalization.CultureInfo.InvariantCulture,
             LogEventLevel.Information
         );
 

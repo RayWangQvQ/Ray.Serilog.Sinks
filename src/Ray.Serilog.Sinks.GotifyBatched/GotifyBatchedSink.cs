@@ -11,18 +11,18 @@ public class GotifyBatchedSink : BatchedSink
     public GotifyBatchedSink(
         string host,
         string token,
-        Predicate<LogEvent> predicate,
         bool sendBatchesAsOneMessages,
+        int batchSizeLimit,
         string outputTemplate,
         IFormatProvider formatProvider,
         LogEventLevel minimumLogEventLevel
     )
         : base(
-            predicate,
             sendBatchesAsOneMessages,
-            outputTemplate,
-            formatProvider,
-            minimumLogEventLevel
+            batchSizeLimit,
+            outputTemplate: outputTemplate,
+            formatProvider: formatProvider,
+            minimumLogEventLevel: minimumLogEventLevel
         )
     {
         _host = host;

@@ -17,9 +17,9 @@ public class DingTalkBatchedSinkTests
         // Arrange & Act
         var sink = new DingTalkBatchedSink(
             TestWebHookUrl,
-            x => true,
             true,
-            null,
+            100,
+            System.Globalization.CultureInfo.InvariantCulture,
             LogEventLevel.Information
         );
 
@@ -33,9 +33,9 @@ public class DingTalkBatchedSinkTests
         // Arrange & Act
         var sink = new DingTalkBatchedSink(
             TestWebHookUrl,
-            x => true,
             true,
-            null,
+            50,
+            System.Globalization.CultureInfo.InvariantCulture,
             LogEventLevel.Information
         );
 

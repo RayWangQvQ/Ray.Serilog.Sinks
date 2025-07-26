@@ -34,8 +34,8 @@ public class PushPlusLoggerConfigurationExtensionsTests
             topic: "test",
             channel: "wechat",
             webhook: "",
-            containsTrigger: "test",
             sendBatchesAsOneMessages: true,
+            batchSizeLimit: 50,
             outputTemplate: "{Message}",
             formatProvider: null,
             restrictedToMinimumLevel: LogEventLevel.Warning

@@ -34,10 +34,10 @@ public class TelegramIntegrationTests
     {
         // Arrange
         var logger = new LoggerConfiguration()
-            .WriteTo.TelegramBatched("test_token", "test_chat_id", "", "【Push】")
+            .WriteTo.TelegramBatched("test_token", "test_chat_id", "")
             .CreateLogger();
 
         // Act & Assert
-        logger.Invoking(l => l.Information("【Push】Test message")).Should().NotThrow();
+        logger.Invoking(l => l.Information("Test message with content")).Should().NotThrow();
     }
 }

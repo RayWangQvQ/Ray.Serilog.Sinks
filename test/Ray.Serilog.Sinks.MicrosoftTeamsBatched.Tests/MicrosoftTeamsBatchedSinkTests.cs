@@ -15,10 +15,10 @@ public class MicrosoftTeamsBatchedSinkTests
         // Arrange & Act
         var sink = new MicrosoftTeamsBatchedSink(
             TestWebHookUrl,
-            x => true,
             true,
+            100,
             "{Message}",
-            null,
+            System.Globalization.CultureInfo.InvariantCulture,
             LogEventLevel.Information
         );
 

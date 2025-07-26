@@ -9,12 +9,12 @@ public class CoolPushBatchedSink : BatchedSink
 
     public CoolPushBatchedSink(
         string sKey,
-        Predicate<LogEvent> predicate,
         bool sendBatchesAsOneMessages,
+        int batchSizeLimit,
         IFormatProvider formatProvider,
         LogEventLevel minimumLogEventLevel
     )
-        : base(predicate, sendBatchesAsOneMessages, formatProvider, minimumLogEventLevel)
+        : base(sendBatchesAsOneMessages, batchSizeLimit, formatProvider: formatProvider, minimumLogEventLevel: minimumLogEventLevel)
     {
         _sKey = sKey;
     }

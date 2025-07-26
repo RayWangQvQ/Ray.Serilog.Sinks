@@ -35,16 +35,15 @@ public class WorkWeiXinAppApiClient : PushService
         _toParty = toParty;
         _toTag = toTag;
 
-        // token
-        var token = GetAccessToken(corpid, secret);
-        _apiUrl = new Uri($"https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={token}");
+        // token will be obtained when sending messages
+        _apiUrl = new Uri("https://qyapi.weixin.qq.com/cgi-bin/message/send");
     }
 
     protected override string ClientName => "WorkWeiXinApp";
 
     protected override string? NewLineStr => "\n";
 
-    protected override HttpResponseMessage DoSend(string message, string title = "")
+    protected override async Task<HttpResponseMessage> DoSendAsync(string message, string title = "")
     {
         var json = new
         {
@@ -58,11 +57,11 @@ public class WorkWeiXinAppApiClient : PushService
 
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = _httpClient.PostAsync(_apiUrl, content).GetAwaiter().GetResult();
+        var response = await _httpClient.PostAsync(_apiUrl, content);
         return response;
     }
 
-    private string GetAccessToken(string corpId, string secret)
+    private async Task<string> GetAccessTokenAsync(string corpId, string secret)
     {
         var token = "";
 
@@ -71,8 +70,8 @@ public class WorkWeiXinAppApiClient : PushService
             var uri = new Uri(
                 $"https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={corpId}&corpsecret={secret}"
             );
-            var response = _httpClient.GetAsync(uri).GetAwaiter().GetResult();
-            var content = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var response = await _httpClient.GetAsync(uri);
+            var content = await response.Content.ReadAsStringAsync();
 
             var re = content.JsonDeserialize<WorkWeiXinAppTokenResponse>();
 

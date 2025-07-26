@@ -4,65 +4,80 @@ using Serilog.Debugging;
 using Serilog.Events;
 using Serilog.Formatting;
 using Serilog.Formatting.Display;
+using System.Collections.Concurrent;
 
 namespace Ray.Serilog.Sinks.Batched;
 
-public abstract class BatchedSink : ILogEventSink, IDisposable
+public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
 {
+    private readonly int _batchSizeLimit;
     private readonly LogEventLevel _minimumLogEventLevel;
-    private readonly Predicate<LogEvent> _predicate;
     private readonly bool _sendBatchesAsOneMessages;
     private readonly ITextFormatter _formatter;
-
-    private readonly BoundedConcurrentQueue<LogEvent> _queue = new();
+    private readonly ConcurrentQueue<LogEvent> _queue = new();
+    private readonly object _syncRoot = new();
+    private readonly SemaphoreSlim _flushSemaphore;
+    private bool _disposed;
 
     protected BatchedSink(
-        Predicate<LogEvent> predicate,
         bool sendBatchesAsOneMessages,
+        int batchSizeLimit,
         IFormatProvider formatProvider,
         LogEventLevel minimumLogEventLevel
     )
-        : this(predicate, sendBatchesAsOneMessages, null, formatProvider, minimumLogEventLevel) { }
+        : this(sendBatchesAsOneMessages, batchSizeLimit,null, formatProvider, minimumLogEventLevel) { }
 
     protected BatchedSink(
-        Predicate<LogEvent> predicate,
-        bool sendBatchesAsOneMessages,
+        bool sendBatchesAsOneMessages=true,
+        int batchSizeLimit=int.MaxValue,
         string? outputTemplate = "{Message:lj}{NewLine}{Exception}",
         IFormatProvider? formatProvider = null,
         LogEventLevel minimumLogEventLevel = LogEventLevel.Verbose
     )
     {
-        _predicate = predicate ?? (x => true);
         _minimumLogEventLevel = minimumLogEventLevel;
         _sendBatchesAsOneMessages = sendBatchesAsOneMessages;
+        _batchSizeLimit = batchSizeLimit;
 
         outputTemplate = string.IsNullOrWhiteSpace(outputTemplate)
             ? Constants.DefaultOutputTemplate
             : outputTemplate;
         _formatter = new MessageTemplateTextFormatter(outputTemplate, formatProvider);
+
+        _flushSemaphore = new SemaphoreSlim(1, 1);
+
+        BatchSinkManager.RegisterSink(this);
     }
 
     public virtual void Emit(LogEvent logEvent)
     {
+        if (_disposed)
+        {
+            return;
+        }
+
         if (logEvent == null)
+        {
             throw new ArgumentNullException(nameof(logEvent));
+        }
 
         try
         {
             if (logEvent.Level < _minimumLogEventLevel)
-                return;
-            _queue.TryEnqueue(logEvent);
-
-            if (_predicate(logEvent))
             {
-                var waitingBatch = new Queue<LogEvent>();
-                while (_queue.TryDequeue(out LogEvent item))
-                {
-                    waitingBatch.Enqueue(item);
-                }
-                var pushTitle = GetPushTitle(logEvent);
-                EmitBatch(waitingBatch, pushTitle);
+                return;
             }
+
+            _queue.Enqueue(logEvent);
+
+            if (_queue.Count <= _batchSizeLimit) return;
+
+            SelfLog.WriteLine(
+                "BatchedSink queue size exceeded limit ({0} > {1}), flushing immediately.",
+                _queue.Count,
+                _batchSizeLimit
+            );
+            FlushAsync().GetAwaiter().GetResult();
         }
         catch (Exception ex)
         {
@@ -74,8 +89,39 @@ public abstract class BatchedSink : ILogEventSink, IDisposable
         }
     }
 
-    protected virtual void EmitBatch(IEnumerable<LogEvent> events, string pushTitle = "")
+    public async Task FlushAsync()
     {
+        if (_disposed)
+            return;
+
+        await _flushSemaphore.WaitAsync();
+        try
+        {
+            var batch = new List<LogEvent>();
+
+            while (_queue.TryDequeue(out var logEvent))
+            {
+                batch.Add(logEvent);
+            }
+
+            if (batch.Count == 0)
+                return;
+
+            await EmitBatchAsync(batch);
+        }
+        finally
+        {
+            _flushSemaphore.Release();
+        }
+    }
+
+    protected virtual async Task EmitBatchAsync(IEnumerable<LogEvent> events, string pushTitle = "")
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
         if (_sendBatchesAsOneMessages)
         {
             var sb = new StringBuilder();
@@ -87,31 +133,31 @@ public abstract class BatchedSink : ILogEventSink, IDisposable
             sb.AppendLine(Environment.NewLine);
 
             var messageToSend = sb.ToString();
-            PushMessage(messageToSend, pushTitle);
+            await PushMessageAsync(messageToSend, pushTitle);
         }
         else
         {
             foreach (var logEvent in events)
             {
                 var message = RenderMessage(logEvent);
-                PushMessage(message);
+                await PushMessageAsync(message);
             }
         }
     }
 
     protected abstract IPushService PushService { get; }
 
-    protected virtual void PushMessage(string message, string title = "推送")
+    public bool IsDisposed => _disposed;
+
+    protected virtual async Task PushMessageAsync(string message, string title = "推送")
     {
         //SelfLog.WriteLine($"Trying to send message: '{message}'.");
-        var result = PushService.PushMessage(message, title);
+        var result = await PushService.PushMessageAsync(message, title);
         SelfLog.WriteLine($"Response status: {result.StatusCode}.");
         try
         {
-            var content = result
-                .Content.ReadAsStringAsync()
-                .GetAwaiter()
-                .GetResult()
+            var content = (await result
+                .Content.ReadAsStringAsync())
                 .Replace("{", "{{")
                 .Replace("}", "}}");
             SelfLog.WriteLine($"Response content: {content}.{Environment.NewLine}");
@@ -194,26 +240,29 @@ public abstract class BatchedSink : ILogEventSink, IDisposable
 
     public virtual void Dispose()
     {
-        try
+        if (_disposed)
         {
-            if (_queue == null)
+            return;
+        }
+
+        lock (_syncRoot)
+        {
+            if (_disposed)
                 return;
 
-            var remainingEvents = new Queue<LogEvent>();
+            _disposed = true;
+        }
 
-            while (_queue.TryDequeue(out LogEvent item))
-            {
-                remainingEvents.Enqueue(item);
-            }
-
-            if (remainingEvents.Count > 0)
-            {
-                EmitBatch(remainingEvents, "应用关闭推送");
-            }
+        try
+        {
+            FlushAsync().GetAwaiter().GetResult();
         }
         catch (Exception ex)
         {
             SelfLog.WriteLine("Exception while disposing BatchedSink: {0}", ex.Message);
         }
+
+        BatchSinkManager.UnregisterSink(this);
+        _flushSemaphore.Dispose();
     }
 }

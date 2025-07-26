@@ -2,6 +2,7 @@
 using Serilog;
 using Serilog.Configuration;
 using Serilog.Events;
+using System.Globalization;
 
 namespace Ray.Serilog.Sinks.TelegramBatched;
 
@@ -11,25 +12,28 @@ public static class TelegramLoggerConfigurationExtensions
         this LoggerSinkConfiguration loggerSinkConfiguration,
         string botToken,
         string chatId,
-        string proxy,
-        string containsTrigger = Constants.DefaultContainsTrigger,
+        string proxy = "",
         bool sendBatchesAsOneMessages = true,
-        IFormatProvider formatProvider = null,
+        int batchSizeLimit = int.MaxValue,
+        string outputTemplate = Constants.DefaultOutputTemplate,
+        IFormatProvider? formatProvider = null,
         LogEventLevel restrictedToMinimumLevel = LogEventLevel.Verbose
     )
     {
-        if (containsTrigger.IsNullOrEmpty())
-            containsTrigger = Constants.DefaultContainsTrigger;
-        Predicate<LogEvent> predicate = x => x.MessageTemplate.Text.Contains(containsTrigger);
+        if (loggerSinkConfiguration == null)
+            throw new ArgumentNullException(nameof(loggerSinkConfiguration));
+        if (outputTemplate == null)
+            throw new ArgumentNullException(nameof(outputTemplate));
 
         return loggerSinkConfiguration.Sink(
             new TelegramBatchedSink(
                 botToken,
                 chatId,
                 proxy,
-                predicate,
                 sendBatchesAsOneMessages,
-                formatProvider,
+                batchSizeLimit,
+                outputTemplate,
+                formatProvider ?? CultureInfo.InvariantCulture,
                 restrictedToMinimumLevel
             ),
             restrictedToMinimumLevel

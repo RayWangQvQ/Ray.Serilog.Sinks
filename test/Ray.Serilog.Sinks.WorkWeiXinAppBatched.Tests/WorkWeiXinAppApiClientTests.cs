@@ -9,15 +9,15 @@ public class WorkWeiXinAppApiClientTests
     private const string TestAgentId = "test_agent_id_123456";
 
     [Fact]
-    public void PushMessage_WithValidParameters_ShouldReturnResponse()
+    public async Task PushMessageAsync_WithValidParameters_ShouldReturnResponse()
     {
         // Arrange
-        var client = new WorkWeiXinAppApiClient(TestCorpId, TestCorpSecret, TestAgentId);
+        var client = new WorkWeiXinAppApiClient(TestCorpId, TestAgentId, TestCorpSecret);
 
         // Act
-        var act = () => client.PushMessage("Test Content", "Test Title");
+        Func<Task> act = async () => await client.PushMessageAsync("Test Content", "Test Title");
 
         // Assert
-        act.Should().NotThrow();
+        await act.Should().NotThrowAsync();
     }
 }
