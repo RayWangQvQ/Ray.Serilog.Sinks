@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Ray.Serilog.Sinks.Batched;
-using Serilog.Core;
-using Serilog.Debugging;
 using Serilog.Events;
 
 namespace Ray.Serilog.Sinks.TelegramBatched;

@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Ray.Serilog.Sinks.MicrosoftTeamsBatched;
 using Serilog;
 using Serilog.Events;
 using Xunit;

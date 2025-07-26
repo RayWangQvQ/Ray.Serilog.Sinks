@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Serilog;
 using Serilog.Events;
+using Xunit;
 
 namespace Ray.Serilog.Sinks.CoolPushBatched.Tests;
 
