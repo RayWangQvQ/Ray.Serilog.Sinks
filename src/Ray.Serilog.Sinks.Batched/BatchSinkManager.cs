@@ -16,7 +16,7 @@ public class BatchSinkManager
         Sinks.TryRemove(sink, out _);
     }
 
-    public static async Task FlushAllAsync()
+    public static async Task FlushAllAsync(string title = "")
     {
         var tasks = new List<Task>();
 
@@ -24,7 +24,7 @@ public class BatchSinkManager
         {
             if (!sink.IsDisposed)
             {
-                tasks.Add(sink.FlushAsync());
+                tasks.Add(sink.FlushAsync(title));
             }
         }
 
