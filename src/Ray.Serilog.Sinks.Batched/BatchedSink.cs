@@ -79,7 +79,7 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
                 _queue.Count,
                 _batchSizeLimit
             );
-            FlushAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+            Task.Run(async () => await FlushAsync().ConfigureAwait(false));
         }
         catch (Exception ex)
         {
