@@ -18,10 +18,9 @@ public abstract class BatchedSink : ILogEventSink, IDisposable
     private readonly bool _sendBatchesAsOneMessages;
     private readonly ITextFormatter _formatter;
 
-    private readonly BoundedConcurrentQueue<LogEvent> _queue =
-        new BoundedConcurrentQueue<LogEvent>();
+    private readonly BoundedConcurrentQueue<LogEvent> _queue = new();
 
-    public BatchedSink(
+    protected BatchedSink(
         Predicate<LogEvent> predicate,
         bool sendBatchesAsOneMessages,
         IFormatProvider formatProvider,
@@ -29,7 +28,7 @@ public abstract class BatchedSink : ILogEventSink, IDisposable
     )
         : this(predicate, sendBatchesAsOneMessages, null, formatProvider, minimumLogEventLevel) { }
 
-    public BatchedSink(
+    protected BatchedSink(
         Predicate<LogEvent> predicate,
         bool sendBatchesAsOneMessages,
         string outputTemplate = "{Message:lj}{NewLine}{Exception}",
@@ -50,7 +49,7 @@ public abstract class BatchedSink : ILogEventSink, IDisposable
     public virtual void Emit(LogEvent logEvent)
     {
         if (logEvent == null)
-            throw new ArgumentNullException("logEvent");
+            throw new ArgumentNullException(nameof(logEvent));
 
         try
         {

@@ -10,7 +10,7 @@ public class CoolPushApiClient : PushService
     private const string Host = "https://push.xuthus.cc/send";
 
     private readonly Uri _apiUrl;
-    private readonly HttpClient _httpClient = new HttpClient();
+    private readonly HttpClient _httpClient = new();
 
     public CoolPushApiClient(string sKey)
     {
