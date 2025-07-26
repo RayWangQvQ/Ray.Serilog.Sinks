@@ -21,7 +21,7 @@ internal class BoundedConcurrentQueue<T>
         if (queueLimit.HasValue && queueLimit <= 0)
         {
             throw new ArgumentOutOfRangeException(
-                "queueLimit",
+                nameof(queueLimit),
                 "Queue limit must be positive, or `null` to indicate unbounded."
             );
         }
