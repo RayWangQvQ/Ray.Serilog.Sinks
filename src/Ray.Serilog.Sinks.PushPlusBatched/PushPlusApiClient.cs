@@ -41,11 +41,7 @@ public class PushPlusApiClient : PushService
             if (_channel.IsNullOrEmpty())
                 return re;
 
-            bool suc = Enum.TryParse(
-                _channel,
-                true,
-                out PushPlusChannelType channel
-            );
+            bool suc = Enum.TryParse(_channel, true, out PushPlusChannelType channel);
             if (suc)
                 re = channel;
 

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
-using Ray.Serilog.Sinks.Batched;
+﻿using Ray.Serilog.Sinks.Batched;
 
 namespace Ray.Serilog.Sinks.ServerChanBatched;
 
@@ -30,7 +28,8 @@ public class ServerChanApiClient : PushService
     protected override string BuildMsg(string message, string title = "")
     {
         var msg = base.BuildMsg(message, title);
-        msg += $"{Environment.NewLine}### 检测到当前为老版Server酱,即将失效,建议更换其他推送方式或更新至Server酱Turbo版";
+        msg +=
+            $"{Environment.NewLine}### 检测到当前为老版Server酱,即将失效,建议更换其他推送方式或更新至Server酱Turbo版";
         return msg;
     }
 

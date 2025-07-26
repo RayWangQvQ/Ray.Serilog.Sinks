@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using Ray.Serilog.Sinks.Batched;
 
