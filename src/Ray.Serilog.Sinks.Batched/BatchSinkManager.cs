@@ -4,23 +4,23 @@ namespace Ray.Serilog.Sinks.Batched;
 
 public class BatchSinkManager
 {
-    private static readonly ConcurrentBag<IBatchSink> Sinks = new();
+    private static readonly ConcurrentDictionary<IBatchSink, bool> Sinks = new();
 
     internal static void RegisterSink(IBatchSink sink)
     {
-        Sinks.Add(sink);
+        Sinks.TryAdd(sink, true);
     }
 
     internal static void UnregisterSink(IBatchSink sink)
     {
-        // ConcurrentBag不支持直接移除，但在Dispose时会自动清理
+        Sinks.TryRemove(sink, out _);
     }
 
     public static async Task FlushAllAsync()
     {
         var tasks = new List<Task>();
 
-        foreach (var sink in Sinks)
+        foreach (var sink in Sinks.Keys)
         {
             if (!sink.IsDisposed)
             {

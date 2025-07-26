@@ -34,8 +34,6 @@ public class WorkWeiXinAppApiClient : PushService
         _toUser = toUser;
         _toParty = toParty;
         _toTag = toTag;
-
-        // token will be obtained when sending messages
         _apiUrl = new Uri("https://qyapi.weixin.qq.com/cgi-bin/message/send");
     }
 
