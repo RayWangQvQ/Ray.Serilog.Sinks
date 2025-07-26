@@ -63,7 +63,10 @@ public class TelegramApiClient : PushService
 
     protected override string ClientName => "Telegram机器人";
 
-    protected override HttpResponseMessage DoSend(string message, string title = "")
+    protected override async Task<HttpResponseMessage> DoSendAsync(
+        string message,
+        string title = ""
+    )
     {
         SelfLog.WriteLine($"使用代理：{!_proxy.IsNullOrEmpty()}");
 
@@ -75,7 +78,7 @@ public class TelegramApiClient : PushService
             disable_web_page_preview = true,
         }.ToJsonStr();
         var content = new StringContent(json, Encoding.UTF8, "application/json");
-        var response = this._httpClient.PostAsync(this._apiUrl, content).GetAwaiter().GetResult();
+        var response = await _httpClient.PostAsync(this._apiUrl, content);
         return response;
     }
 

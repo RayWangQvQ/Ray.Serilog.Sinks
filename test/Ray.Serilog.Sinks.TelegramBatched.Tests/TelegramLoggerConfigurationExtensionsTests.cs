@@ -34,8 +34,9 @@ public class TelegramLoggerConfigurationExtensionsTests
             TestBotToken,
             TestChatId,
             "http://proxy.example.com:8080",
-            "【Push】",
             false,
+            50,
+            "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
             null,
             LogEventLevel.Warning
         );
@@ -45,31 +46,13 @@ public class TelegramLoggerConfigurationExtensionsTests
     }
 
     [Fact]
-    public void TelegramBatched_WithNullContainsTrigger_ShouldUseDefault()
+    public void TelegramBatched_WithMinimalParameters_ShouldUseDefaults()
     {
         // Arrange
         var loggerConfiguration = new LoggerConfiguration();
 
         // Act
-        var result = loggerConfiguration.WriteTo.TelegramBatched(
-            TestBotToken,
-            TestChatId,
-            "",
-            null
-        );
-
-        // Assert
-        result.Should().NotBeNull();
-    }
-
-    [Fact]
-    public void TelegramBatched_WithEmptyContainsTrigger_ShouldUseDefault()
-    {
-        // Arrange
-        var loggerConfiguration = new LoggerConfiguration();
-
-        // Act
-        var result = loggerConfiguration.WriteTo.TelegramBatched(TestBotToken, TestChatId, "", "");
+        var result = loggerConfiguration.WriteTo.TelegramBatched(TestBotToken, TestChatId);
 
         // Assert
         result.Should().NotBeNull();

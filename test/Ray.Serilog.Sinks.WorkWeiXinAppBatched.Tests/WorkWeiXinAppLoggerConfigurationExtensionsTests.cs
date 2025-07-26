@@ -45,11 +45,11 @@ public class WorkWeiXinAppLoggerConfigurationExtensionsTests
             toUser: "@all",
             toParty: "",
             toTag: "",
-            restrictedToMinimumLevel: LogEventLevel.Warning,
-            containsTrigger: "test",
             sendBatchesAsOneMessages: true,
+            batchSizeLimit: 50,
             outputTemplate: "{Message}",
-            formatProvider: null
+            formatProvider: System.Globalization.CultureInfo.InvariantCulture,
+            restrictedToMinimumLevel: LogEventLevel.Warning
         );
 
         // Assert

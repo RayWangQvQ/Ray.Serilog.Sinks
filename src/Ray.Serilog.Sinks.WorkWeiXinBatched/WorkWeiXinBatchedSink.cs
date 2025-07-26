@@ -9,12 +9,19 @@ public class WorkWeiXinBatchedSink : BatchedSink
 
     public WorkWeiXinBatchedSink(
         string webHookUrl,
-        Predicate<LogEvent> predicate,
         bool sendBatchesAsOneMessages,
+        int batchSizeLimit,
+        string outputTemplate,
         IFormatProvider formatProvider,
         LogEventLevel minimumLogEventLevel
     )
-        : base(predicate, sendBatchesAsOneMessages, formatProvider, minimumLogEventLevel)
+        : base(
+            sendBatchesAsOneMessages,
+            batchSizeLimit,
+            outputTemplate: outputTemplate,
+            formatProvider: formatProvider,
+            minimumLogEventLevel: minimumLogEventLevel
+        )
     {
         _webHookUrl = webHookUrl;
     }

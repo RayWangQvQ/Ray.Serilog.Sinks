@@ -1,3 +1,5 @@
+## 0.0.11
+- Refactor BatchedSink
 ## 0.0.10
 - Refactor PushService
 ## 0.0.9

@@ -17,10 +17,10 @@ public class GotifyBatchedSinkTests
         var sink = new GotifyBatchedSink(
             TestHost,
             TestToken,
-            x => true,
             true,
+            100,
             "{Message}",
-            null,
+            System.Globalization.CultureInfo.InvariantCulture,
             LogEventLevel.Information
         );
 

@@ -31,7 +31,7 @@ public class DingTalkLoggerConfigurationExtensionsTests
         var configuration = new LoggerConfiguration();
 
         // Act
-        var result = configuration.WriteTo.DingTalkBatched(TestWebHookUrl, TestSecret);
+        var result = configuration.WriteTo.DingTalkBatched(TestWebHookUrl);
 
         // Assert
         result.Should().NotBeNull();
@@ -47,9 +47,9 @@ public class DingTalkLoggerConfigurationExtensionsTests
         // Act
         var result = configuration.WriteTo.DingTalkBatched(
             webHookUrl: TestWebHookUrl,
-            containsTrigger: "test",
             sendBatchesAsOneMessages: true,
-            formatProvider: null,
+            batchSizeLimit: 50,
+            formatProvider: System.Globalization.CultureInfo.InvariantCulture,
             restrictedToMinimumLevel: LogEventLevel.Warning
         );
 

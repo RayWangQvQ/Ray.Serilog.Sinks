@@ -15,9 +15,9 @@ public class CoolPushBatchedSinkTests
         // Arrange & Act
         var sink = new CoolPushBatchedSink(
             TestSKey,
-            x => true,
             true,
-            null,
+            100,
+            System.Globalization.CultureInfo.InvariantCulture,
             LogEventLevel.Information
         );
 

@@ -1,7 +1,6 @@
 using FluentAssertions;
 using Serilog;
 using Serilog.Events;
-using Xunit;
 
 namespace Ray.Serilog.Sinks.CoolPushBatched.Tests;
 
@@ -32,10 +31,10 @@ public class CoolPushLoggerConfigurationExtensionsTests
         // Act
         var result = configuration.WriteTo.CoolPushBatched(
             sKey: TestSKey,
-            restrictedToMinimumLevel: LogEventLevel.Warning,
-            containsTrigger: "test",
             sendBatchesAsOneMessages: true,
-            formatProvider: null
+            batchSizeLimit: 50,
+            formatProvider: System.Globalization.CultureInfo.InvariantCulture,
+            restrictedToMinimumLevel: LogEventLevel.Warning
         );
 
         // Assert

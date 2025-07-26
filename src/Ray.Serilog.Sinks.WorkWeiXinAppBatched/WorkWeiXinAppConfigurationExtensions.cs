@@ -1,4 +1,5 @@
-﻿using Ray.Serilog.Sinks.Batched;
+﻿using System.Globalization;
+using Ray.Serilog.Sinks.Batched;
 using Serilog;
 using Serilog.Configuration;
 using Serilog.Events;
@@ -12,13 +13,13 @@ public static class WorkWeiXinAppConfigurationExtensions
         string corpId,
         string agentId,
         string secret,
-        string toUser,
-        string toParty,
-        string toTag,
-        string containsTrigger = Constants.DefaultContainsTrigger,
+        string toUser = "",
+        string toParty = "",
+        string toTag = "",
         bool sendBatchesAsOneMessages = true,
+        int batchSizeLimit = int.MaxValue,
         string outputTemplate = Constants.DefaultOutputTemplate,
-        IFormatProvider formatProvider = null,
+        IFormatProvider? formatProvider = null,
         LogEventLevel restrictedToMinimumLevel = LogEventLevel.Verbose
     )
     {
@@ -26,10 +27,6 @@ public static class WorkWeiXinAppConfigurationExtensions
             throw new ArgumentNullException(nameof(loggerSinkConfiguration));
         if (outputTemplate == null)
             throw new ArgumentNullException(nameof(outputTemplate));
-
-        if (containsTrigger.IsNullOrEmpty())
-            containsTrigger = Constants.DefaultContainsTrigger;
-        Predicate<LogEvent> predicate = x => x.MessageTemplate.Text.Contains(containsTrigger);
 
         return loggerSinkConfiguration.Sink(
             new WorkWeiXinAppBatchedSink(
@@ -39,10 +36,10 @@ public static class WorkWeiXinAppConfigurationExtensions
                 toUser,
                 toParty,
                 toTag,
-                predicate,
                 sendBatchesAsOneMessages,
+                batchSizeLimit,
                 outputTemplate,
-                formatProvider,
+                formatProvider ?? CultureInfo.InvariantCulture,
                 restrictedToMinimumLevel
             ),
             restrictedToMinimumLevel

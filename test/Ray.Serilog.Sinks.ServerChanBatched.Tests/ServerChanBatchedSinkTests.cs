@@ -15,9 +15,10 @@ public class ServerChanBatchedSinkTests
         var sink = new ServerChanBatchedSink(
             TestSendKey,
             "",
-            x => true,
             true,
-            null,
+            100,
+            "{Message:lj}{NewLine}{Exception}",
+            System.Globalization.CultureInfo.InvariantCulture,
             LogEventLevel.Information
         );
 

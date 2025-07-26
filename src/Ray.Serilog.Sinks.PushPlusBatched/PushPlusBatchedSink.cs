@@ -15,18 +15,18 @@ public class PushPlusBatchedSink : BatchedSink
         string topic,
         string channel,
         string webhook,
-        Predicate<LogEvent> predicate,
         bool sendBatchesAsOneMessages,
+        int batchSizeLimit,
         string outputTemplate,
         IFormatProvider formatProvider,
         LogEventLevel minimumLogEventLevel
     )
         : base(
-            predicate,
             sendBatchesAsOneMessages,
-            outputTemplate,
-            formatProvider,
-            minimumLogEventLevel
+            batchSizeLimit,
+            outputTemplate: outputTemplate,
+            formatProvider: formatProvider,
+            minimumLogEventLevel: minimumLogEventLevel
         )
     {
         _token = token;

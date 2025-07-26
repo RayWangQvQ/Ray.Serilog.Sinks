@@ -19,9 +19,10 @@ public class TelegramBatchedSinkTests
             TestBotToken,
             TestChatId,
             TestProxy,
-            x => true,
             true,
-            null,
+            100,
+            "{Message:lj}{NewLine}{Exception}",
+            System.Globalization.CultureInfo.InvariantCulture,
             LogEventLevel.Information
         );
 
@@ -37,9 +38,10 @@ public class TelegramBatchedSinkTests
             "",
             TestChatId,
             TestProxy,
-            x => true,
             true,
-            null,
+            100,
+            "{Message:lj}{NewLine}{Exception}",
+            System.Globalization.CultureInfo.InvariantCulture,
             LogEventLevel.Information
         );
 
@@ -55,9 +57,10 @@ public class TelegramBatchedSinkTests
             "",
             TestChatId,
             TestProxy,
-            x => true,
             true,
-            null,
+            100,
+            "{Message:lj}{NewLine}{Exception}",
+            System.Globalization.CultureInfo.InvariantCulture,
             LogEventLevel.Information
         );
 
@@ -75,9 +78,10 @@ public class TelegramBatchedSinkTests
             TestBotToken,
             "",
             TestProxy,
-            x => true,
             true,
-            null,
+            100,
+            "{Message:lj}{NewLine}{Exception}",
+            System.Globalization.CultureInfo.InvariantCulture,
             LogEventLevel.Information
         );
 
@@ -95,9 +99,10 @@ public class TelegramBatchedSinkTests
             TestBotToken,
             TestChatId,
             TestProxy,
-            x => true,
             true,
-            null,
+            100,
+            "{Message:lj}{NewLine}{Exception}",
+            System.Globalization.CultureInfo.InvariantCulture,
             LogEventLevel.Information
         );
 
@@ -119,9 +124,10 @@ public class TelegramBatchedSinkTests
             TestBotToken,
             TestChatId,
             TestProxy,
-            x => true,
             true,
-            null,
+            100,
+            "{Message:lj}{NewLine}{Exception}",
+            System.Globalization.CultureInfo.InvariantCulture,
             logLevel
         );
 
@@ -137,9 +143,10 @@ public class TelegramBatchedSinkTests
             TestBotToken,
             TestChatId,
             TestProxy,
-            x => true,
             true,
-            null,
+            100,
+            "{Message:lj}{NewLine}{Exception}",
+            System.Globalization.CultureInfo.InvariantCulture,
             LogEventLevel.Information
         );
 

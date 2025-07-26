@@ -1,4 +1,4 @@
-﻿using Ray.Serilog.Sinks.Batched;
+﻿using System.Globalization;
 using Serilog;
 using Serilog.Configuration;
 using Serilog.Events;
@@ -12,24 +12,23 @@ public static class OtherApiLoggerConfigurationExtensions
         string api,
         string bodyJsonTemplate,
         string placeholder,
-        string containsTrigger = Constants.DefaultContainsTrigger,
         bool sendBatchesAsOneMessages = true,
-        IFormatProvider formatProvider = null,
+        int batchSizeLimit = int.MaxValue,
+        IFormatProvider? formatProvider = null,
         LogEventLevel restrictedToMinimumLevel = LogEventLevel.Verbose
     )
     {
-        if (containsTrigger.IsNullOrEmpty())
-            containsTrigger = Constants.DefaultContainsTrigger;
-        Predicate<LogEvent> predicate = x => x.MessageTemplate.Text.Contains(containsTrigger);
+        if (loggerSinkConfiguration == null)
+            throw new ArgumentNullException(nameof(loggerSinkConfiguration));
 
         return loggerSinkConfiguration.Sink(
             new OtherApiBatchedSink(
                 api,
                 bodyJsonTemplate,
                 placeholder,
-                predicate,
                 sendBatchesAsOneMessages,
-                formatProvider,
+                batchSizeLimit,
+                formatProvider ?? CultureInfo.InvariantCulture,
                 restrictedToMinimumLevel
             ),
             restrictedToMinimumLevel

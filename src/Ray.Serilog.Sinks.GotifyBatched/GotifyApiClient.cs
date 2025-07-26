@@ -22,7 +22,10 @@ public class GotifyApiClient : PushService
 
     protected override string? NewLineStr => "\n";
 
-    protected override HttpResponseMessage DoSend(string message, string title = "")
+    protected override async Task<HttpResponseMessage> DoSendAsync(
+        string message,
+        string title = ""
+    )
     {
         var json = new
         {
@@ -33,7 +36,7 @@ public class GotifyApiClient : PushService
 
         var content = new StringContent(json, Encoding.UTF8, "application/json");
         content.Headers.Add("X-Gotify-Key", _token);
-        var response = _httpClient.PostAsync(_apiUrl, content).GetAwaiter().GetResult();
+        var response = await _httpClient.PostAsync(_apiUrl, content);
         response.Content = new StringContent("");
         return response;
     }

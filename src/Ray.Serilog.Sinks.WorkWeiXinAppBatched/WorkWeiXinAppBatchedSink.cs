@@ -20,18 +20,18 @@ public class WorkWeiXinAppBatchedSink : BatchedSink
         string toUser,
         string toParty,
         string toTag,
-        Predicate<LogEvent> predicate,
         bool sendBatchesAsOneMessages,
+        int batchSizeLimit,
         string outputTemplate,
         IFormatProvider formatProvider,
         LogEventLevel minimumLogEventLevel
     )
         : base(
-            predicate,
             sendBatchesAsOneMessages,
-            outputTemplate,
-            formatProvider,
-            minimumLogEventLevel
+            batchSizeLimit,
+            outputTemplate: outputTemplate,
+            formatProvider: formatProvider,
+            minimumLogEventLevel: minimumLogEventLevel
         )
     {
         _corpId = corpId;

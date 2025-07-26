@@ -32,8 +32,9 @@ public class ServerChanLoggerConfigurationExtensionsTests
         var result = configuration.WriteTo.ServerChanBatched(
             scKey: TestSendKey,
             turboScKey: "",
-            containsTrigger: "test",
             sendBatchesAsOneMessages: true,
+            batchSizeLimit: 50,
+            outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
             formatProvider: null,
             restrictedToMinimumLevel: LogEventLevel.Warning
         );

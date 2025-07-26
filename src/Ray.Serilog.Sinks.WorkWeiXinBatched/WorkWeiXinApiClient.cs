@@ -35,7 +35,10 @@ public class WorkWeiXinApiClient : PushService
         return msg;
     }
 
-    protected override HttpResponseMessage DoSend(string message, string title = "")
+    protected override async Task<HttpResponseMessage> DoSendAsync(
+        string message,
+        string title = ""
+    )
     {
         var json = new
         {
@@ -44,7 +47,7 @@ public class WorkWeiXinApiClient : PushService
         }.ToJsonStr();
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = _httpClient.PostAsync(_apiUrl, content).GetAwaiter().GetResult();
+        var response = await _httpClient.PostAsync(_apiUrl, content);
         return response;
     }
 }

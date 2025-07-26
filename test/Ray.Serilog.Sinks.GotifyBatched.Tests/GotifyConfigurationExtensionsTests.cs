@@ -34,11 +34,11 @@ public class GotifyConfigurationExtensionsTests
         var result = configuration.WriteTo.GotifyBatched(
             host: TestHost,
             token: TestToken,
-            restrictedToMinimumLevel: LogEventLevel.Warning,
-            containsTrigger: "test",
             sendBatchesAsOneMessages: true,
+            batchSizeLimit: 50,
             outputTemplate: "{Message}",
-            formatProvider: null
+            formatProvider: System.Globalization.CultureInfo.InvariantCulture,
+            restrictedToMinimumLevel: LogEventLevel.Warning
         );
 
         // Assert

@@ -33,11 +33,14 @@ public class ServerChanApiClient : PushService
         return msg;
     }
 
-    protected override HttpResponseMessage DoSend(string message, string title = "")
+    protected override async Task<HttpResponseMessage> DoSendAsync(
+        string message,
+        string title = ""
+    )
     {
         var dic = new Dictionary<string, string> { { "text", title }, { "desp", message } };
         var content = new FormUrlEncodedContent(dic);
-        var response = _httpClient.PostAsync(_apiUrl, content).GetAwaiter().GetResult();
+        var response = await _httpClient.PostAsync(_apiUrl, content);
         return response;
     }
 }

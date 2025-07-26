@@ -9,18 +9,18 @@ public class MicrosoftTeamsBatchedSink : BatchedSink
 
     public MicrosoftTeamsBatchedSink(
         string webhook,
-        Predicate<LogEvent> predicate,
         bool sendBatchesAsOneMessages,
+        int batchSizeLimit,
         string outputTemplate,
         IFormatProvider formatProvider,
         LogEventLevel minimumLogEventLevel
     )
         : base(
-            predicate,
             sendBatchesAsOneMessages,
-            outputTemplate,
-            formatProvider,
-            minimumLogEventLevel
+            batchSizeLimit,
+            outputTemplate: outputTemplate,
+            formatProvider: formatProvider,
+            minimumLogEventLevel: minimumLogEventLevel
         )
     {
         _webhook = webhook;

@@ -2,5 +2,5 @@ namespace Ray.Serilog.Sinks.Batched;
 
 public interface IPushService
 {
-    HttpResponseMessage PushMessage(string message, string title = "");
+    Task<HttpResponseMessage> PushMessageAsync(string message, string title = "");
 }

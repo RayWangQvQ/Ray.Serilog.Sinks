@@ -17,15 +17,15 @@ public class WorkWeiXinAppBatchedSinkTests
         // Arrange & Act
         var sink = new WorkWeiXinAppBatchedSink(
             TestCorpId,
-            TestCorpSecret,
             TestAgentId,
+            TestCorpSecret,
             "@all",
             "",
             "",
-            x => true,
             true,
-            "",
-            null,
+            100,
+            "{Message:lj}{NewLine}{Exception}",
+            System.Globalization.CultureInfo.InvariantCulture,
             LogEventLevel.Information
         );
 

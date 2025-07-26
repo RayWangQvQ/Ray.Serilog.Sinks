@@ -1,4 +1,5 @@
-﻿using Ray.Serilog.Sinks.Batched;
+﻿using System.Globalization;
+using Ray.Serilog.Sinks.Batched;
 using Serilog;
 using Serilog.Configuration;
 using Serilog.Events;
@@ -10,24 +11,27 @@ public static class ServerChanLoggerConfigurationExtensions
     public static LoggerConfiguration ServerChanBatched(
         this LoggerSinkConfiguration loggerSinkConfiguration,
         string scKey,
-        string turboScKey,
-        string containsTrigger = Constants.DefaultContainsTrigger,
+        string turboScKey = "",
         bool sendBatchesAsOneMessages = true,
-        IFormatProvider formatProvider = null,
+        int batchSizeLimit = int.MaxValue,
+        string outputTemplate = Constants.DefaultOutputTemplate,
+        IFormatProvider? formatProvider = null,
         LogEventLevel restrictedToMinimumLevel = LogEventLevel.Verbose
     )
     {
-        if (containsTrigger.IsNullOrEmpty())
-            containsTrigger = Constants.DefaultContainsTrigger;
-        Predicate<LogEvent> predicate = x => x.MessageTemplate.Text.Contains(containsTrigger);
+        if (loggerSinkConfiguration == null)
+            throw new ArgumentNullException(nameof(loggerSinkConfiguration));
+        if (outputTemplate == null)
+            throw new ArgumentNullException(nameof(outputTemplate));
 
         return loggerSinkConfiguration.Sink(
             new ServerChanBatchedSink(
                 scKey,
                 turboScKey,
-                predicate,
                 sendBatchesAsOneMessages,
-                formatProvider,
+                batchSizeLimit,
+                outputTemplate,
+                formatProvider ?? CultureInfo.InvariantCulture,
                 restrictedToMinimumLevel
             ),
             restrictedToMinimumLevel
