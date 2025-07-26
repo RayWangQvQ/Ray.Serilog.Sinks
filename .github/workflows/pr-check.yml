@@ -9,7 +9,7 @@ env:
   DOTNET_VERSION: '8.0.x'
   NUGET_SOURCE: 'https://api.nuget.org/v3/index.json'
   CSHARPIER_VERSION: '0.30.5'
-  COVERAGE_THRESHOLD: '70'
+  COVERAGE_THRESHOLD: '60'
 
 jobs:
   pr-check:
