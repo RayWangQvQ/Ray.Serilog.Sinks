@@ -15,11 +15,11 @@ public class MicrosoftTeamsApiClient : PushService
         _apiUrl = new Uri(webhook);
     }
 
-    public override string ClientName => "MicrosoftTeams";
+    protected override string ClientName => "MicrosoftTeams";
 
     protected override string NewLineStr => "<br/>";
 
-    public override HttpResponseMessage DoSend()
+    protected override HttpResponseMessage DoSend()
     {
         var json = new { text = Msg }.ToJsonStr();
 

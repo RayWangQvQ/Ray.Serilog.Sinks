@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Threading;
+﻿using System.Collections.Concurrent;
 
 namespace Ray.Serilog.Sinks.Batched;
 
@@ -8,7 +6,7 @@ internal class BoundedConcurrentQueue<T>
 {
     public const int Unbounded = -1;
 
-    private readonly ConcurrentQueue<T> _queue = new ConcurrentQueue<T>();
+    private readonly ConcurrentQueue<T> _queue = new();
 
     private readonly int _queueLimit;
 

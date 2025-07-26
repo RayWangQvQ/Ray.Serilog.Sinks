@@ -5,19 +5,6 @@ namespace Ray.Serilog.Sinks.Batched.Tests;
 public class PushServiceTests
 {
     [Fact]
-    public void ClientName_ShouldReturnNonEmptyString()
-    {
-        // Arrange
-        var pushService = new TestPushService();
-
-        // Act
-        var clientName = pushService.ClientName;
-
-        // Assert
-        clientName.Should().NotBeNullOrEmpty();
-    }
-
-    [Fact]
     public void PushMessage_WithValidParameters_ShouldComplete()
     {
         // Arrange
@@ -53,9 +40,9 @@ public class PushServiceTests
 
     private class TestPushService : PushService
     {
-        public override string ClientName => "Test Push Service";
+        protected override string ClientName => "Test Push Service";
 
-        public override HttpResponseMessage DoSend()
+        protected override HttpResponseMessage DoSend()
         {
             return new HttpResponseMessage(System.Net.HttpStatusCode.OK);
         }

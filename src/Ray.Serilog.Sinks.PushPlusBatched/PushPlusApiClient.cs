@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Text;
+﻿using System.Text;
 using Ray.Serilog.Sinks.Batched;
 
 namespace Ray.Serilog.Sinks.PushPlusBatched;
@@ -32,7 +30,7 @@ public class PushPlusApiClient : PushService
         _webhook = webhook;
     }
 
-    public override string ClientName => "PushPlus";
+    protected override string ClientName => "PushPlus";
 
     private PushPlusChannelType ChannelType
     {
@@ -57,7 +55,7 @@ public class PushPlusApiClient : PushService
 
     protected override string NewLineStr => "<br/>";
 
-    public override HttpResponseMessage DoSend()
+    protected override HttpResponseMessage DoSend()
     {
         var json = new
         {

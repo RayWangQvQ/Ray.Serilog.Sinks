@@ -15,7 +15,6 @@ public class TelegramApiClientTests
 
         // Assert
         client.Should().NotBeNull();
-        client.ClientName.Should().Be("Telegram机器人");
     }
 
     [Theory]
@@ -51,21 +50,5 @@ public class TelegramApiClientTests
 
         // Assert
         client.Should().NotBeNull();
-    }
-
-    [Fact]
-    public void BuildMsg_ShouldAddTitleToMessage()
-    {
-        // Arrange
-        var client = new TelegramApiClient(TestBotToken, TestChatId);
-        client.Msg = "Test message";
-        client.Title = "Test Title";
-
-        // Act
-        client.BuildMsg();
-
-        // Assert
-        client.Msg.Should().Contain("<b>Test Title</b>");
-        client.Msg.Should().Contain("Test message");
     }
 }

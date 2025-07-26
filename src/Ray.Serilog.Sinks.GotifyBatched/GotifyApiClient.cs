@@ -18,11 +18,11 @@ public class GotifyApiClient : PushService
         _apiUrl = new Uri($"{host}/message");
     }
 
-    public override string ClientName => "Gotify";
+    protected override string ClientName => "Gotify";
 
     protected override string NewLineStr => "\n";
 
-    public override HttpResponseMessage DoSend()
+    protected override HttpResponseMessage DoSend()
     {
         var json = new
         {

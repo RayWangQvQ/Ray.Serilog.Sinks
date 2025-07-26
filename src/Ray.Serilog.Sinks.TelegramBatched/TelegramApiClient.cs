@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net;
 using System.Text;
 using Ray.Serilog.Sinks.Batched;
 using Serilog.Debugging;
@@ -63,9 +61,9 @@ public class TelegramApiClient : PushService
         this._httpClient.Timeout = TimeSpan.FromSeconds(timeoutSeconds);
     }
 
-    public override string ClientName => "Telegram机器人";
+    protected override string ClientName => "Telegram机器人";
 
-    public override HttpResponseMessage DoSend()
+    protected override HttpResponseMessage DoSend()
     {
         SelfLog.WriteLine($"使用代理：{!_proxy.IsNullOrEmpty()}");
 

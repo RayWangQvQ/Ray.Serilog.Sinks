@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Text;
+﻿using System.Text;
 using Ray.Serilog.Sinks.Batched;
 
 namespace Ray.Serilog.Sinks.OtherApiBatched;
@@ -20,7 +18,7 @@ public class OtherApiClient : PushService
         _apiUri = new Uri(apiUrl);
     }
 
-    public override string ClientName => "自定义";
+    protected override string ClientName => "自定义";
 
     public override void BuildMsg()
     {
@@ -28,7 +26,7 @@ public class OtherApiClient : PushService
         _json = _json.Replace(_placeholder, Msg.ToJsonStr());
     }
 
-    public override HttpResponseMessage DoSend()
+    protected override HttpResponseMessage DoSend()
     {
         var content = new StringContent(_json, Encoding.UTF8, "application/json");
         var response = this._httpClient.PostAsync(_apiUri, content).GetAwaiter().GetResult();
