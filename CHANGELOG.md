@@ -1,3 +1,5 @@
+## 0.0.8
+- Upgrade pkgs
 ## 0.0.7
 - Migrate to .NET 8
 ## 0.0.6
