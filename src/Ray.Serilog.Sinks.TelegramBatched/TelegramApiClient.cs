@@ -63,7 +63,10 @@ public class TelegramApiClient : PushService
 
     protected override string ClientName => "Telegram机器人";
 
-    protected override async Task<HttpResponseMessage> DoSendAsync(string message, string title = "")
+    protected override async Task<HttpResponseMessage> DoSendAsync(
+        string message,
+        string title = ""
+    )
     {
         SelfLog.WriteLine($"使用代理：{!_proxy.IsNullOrEmpty()}");
 

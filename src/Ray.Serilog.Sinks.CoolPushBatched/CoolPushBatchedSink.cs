@@ -14,7 +14,12 @@ public class CoolPushBatchedSink : BatchedSink
         IFormatProvider formatProvider,
         LogEventLevel minimumLogEventLevel
     )
-        : base(sendBatchesAsOneMessages, batchSizeLimit, formatProvider: formatProvider, minimumLogEventLevel: minimumLogEventLevel)
+        : base(
+            sendBatchesAsOneMessages,
+            batchSizeLimit,
+            formatProvider: formatProvider,
+            minimumLogEventLevel: minimumLogEventLevel
+        )
     {
         _sKey = sKey;
     }

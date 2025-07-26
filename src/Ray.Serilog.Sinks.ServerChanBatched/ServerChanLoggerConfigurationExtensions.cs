@@ -1,8 +1,8 @@
-﻿using Ray.Serilog.Sinks.Batched;
+﻿using System.Globalization;
+using Ray.Serilog.Sinks.Batched;
 using Serilog;
 using Serilog.Configuration;
 using Serilog.Events;
-using System.Globalization;
 
 namespace Ray.Serilog.Sinks.ServerChanBatched;
 

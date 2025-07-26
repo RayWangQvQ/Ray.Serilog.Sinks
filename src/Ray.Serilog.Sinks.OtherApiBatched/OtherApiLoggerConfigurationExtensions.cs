@@ -1,7 +1,7 @@
-﻿using Serilog;
+﻿using System.Globalization;
+using Serilog;
 using Serilog.Configuration;
 using Serilog.Events;
-using System.Globalization;
 
 namespace Ray.Serilog.Sinks.OtherApiBatched;
 

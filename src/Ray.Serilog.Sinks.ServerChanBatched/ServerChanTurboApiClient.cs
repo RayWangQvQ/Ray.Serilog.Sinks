@@ -25,7 +25,10 @@ public class ServerChanTurboApiClient : PushService
     /// </summary>
     protected override string? NewLineStr => Environment.NewLine + Environment.NewLine;
 
-    protected override async Task<HttpResponseMessage> DoSendAsync(string message, string title = "")
+    protected override async Task<HttpResponseMessage> DoSendAsync(
+        string message,
+        string title = ""
+    )
     {
         var dic = new Dictionary<string, string>
         {

@@ -1,10 +1,10 @@
-﻿using System.Text;
+﻿using System.Collections.Concurrent;
+using System.Text;
 using Serilog.Core;
 using Serilog.Debugging;
 using Serilog.Events;
 using Serilog.Formatting;
 using Serilog.Formatting.Display;
-using System.Collections.Concurrent;
 
 namespace Ray.Serilog.Sinks.Batched;
 
@@ -25,11 +25,12 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
         IFormatProvider formatProvider,
         LogEventLevel minimumLogEventLevel
     )
-        : this(sendBatchesAsOneMessages, batchSizeLimit,null, formatProvider, minimumLogEventLevel) { }
+        : this(sendBatchesAsOneMessages, batchSizeLimit, null, formatProvider, minimumLogEventLevel)
+    { }
 
     protected BatchedSink(
-        bool sendBatchesAsOneMessages=true,
-        int batchSizeLimit=int.MaxValue,
+        bool sendBatchesAsOneMessages = true,
+        int batchSizeLimit = int.MaxValue,
         string? outputTemplate = "{Message:lj}{NewLine}{Exception}",
         IFormatProvider? formatProvider = null,
         LogEventLevel minimumLogEventLevel = LogEventLevel.Verbose
@@ -70,7 +71,8 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
 
             _queue.Enqueue(logEvent);
 
-            if (_queue.Count <= _batchSizeLimit) return;
+            if (_queue.Count <= _batchSizeLimit)
+                return;
 
             SelfLog.WriteLine(
                 "BatchedSink queue size exceeded limit ({0} > {1}), flushing immediately.",
@@ -156,8 +158,7 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
         SelfLog.WriteLine($"Response status: {result.StatusCode}.");
         try
         {
-            var content = (await result
-                .Content.ReadAsStringAsync())
+            var content = (await result.Content.ReadAsStringAsync())
                 .Replace("{", "{{")
                 .Replace("}", "}}");
             SelfLog.WriteLine($"Response content: {content}.{Environment.NewLine}");

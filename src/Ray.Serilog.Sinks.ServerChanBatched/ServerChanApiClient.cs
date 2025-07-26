@@ -33,7 +33,10 @@ public class ServerChanApiClient : PushService
         return msg;
     }
 
-    protected override async Task<HttpResponseMessage> DoSendAsync(string message, string title = "")
+    protected override async Task<HttpResponseMessage> DoSendAsync(
+        string message,
+        string title = ""
+    )
     {
         var dic = new Dictionary<string, string> { { "text", title }, { "desp", message } };
         var content = new FormUrlEncodedContent(dic);

@@ -43,7 +43,10 @@ public class WorkWeiXinAppApiClient : PushService
 
     protected override string? NewLineStr => "\n";
 
-    protected override async Task<HttpResponseMessage> DoSendAsync(string message, string title = "")
+    protected override async Task<HttpResponseMessage> DoSendAsync(
+        string message,
+        string title = ""
+    )
     {
         var json = new
         {

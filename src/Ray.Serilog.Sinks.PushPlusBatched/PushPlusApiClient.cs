@@ -51,7 +51,10 @@ public class PushPlusApiClient : PushService
 
     protected override string NewLineStr => "<br/>";
 
-    protected override async Task<HttpResponseMessage> DoSendAsync(string message, string title = "")
+    protected override async Task<HttpResponseMessage> DoSendAsync(
+        string message,
+        string title = ""
+    )
     {
         var json = new
         {

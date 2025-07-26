@@ -52,10 +52,7 @@ public class TelegramLoggerConfigurationExtensionsTests
         var loggerConfiguration = new LoggerConfiguration();
 
         // Act
-        var result = loggerConfiguration.WriteTo.TelegramBatched(
-            TestBotToken,
-            TestChatId
-        );
+        var result = loggerConfiguration.WriteTo.TelegramBatched(TestBotToken, TestChatId);
 
         // Assert
         result.Should().NotBeNull();

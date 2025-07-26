@@ -30,7 +30,10 @@ public class CoolPushApiClient : PushService
         return msg;
     }
 
-    protected override async Task<HttpResponseMessage> DoSendAsync(string message, string title = "")
+    protected override async Task<HttpResponseMessage> DoSendAsync(
+        string message,
+        string title = ""
+    )
     {
         var content = new StringContent(message, Encoding.UTF8, "application/json");
 

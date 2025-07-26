@@ -8,7 +8,10 @@ public abstract class PushService : IPushService
 
     protected virtual string? NewLineStr { get; }
 
-    public virtual async Task<HttpResponseMessage> PushMessageAsync(string message, string title = "")
+    public virtual async Task<HttpResponseMessage> PushMessageAsync(
+        string message,
+        string title = ""
+    )
     {
         SelfLog.WriteLine($"开始推送到:{ClientName}");
 
