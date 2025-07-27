@@ -10,7 +10,8 @@ namespace Ray.Serilog.Sinks.Batched;
 
 public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
 {
-    private readonly ConcurrentDictionary<string, ConcurrentQueue<LogEvent>> _groupLogEvents = new();
+    private readonly ConcurrentDictionary<string, ConcurrentQueue<LogEvent>> _groupLogEvents =
+        new();
 
     private readonly int _batchSizeLimit;
     private readonly LogEventLevel _minimumLogEventLevel;
@@ -70,13 +71,16 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
                 return;
             }
 
-            var context = JobContextManager.Current ?? new JobExecutionContext("Unknown", "UnknownJob");
+            var context =
+                JobContextManager.Current ?? new JobExecutionContext("Unknown", "UnknownJob");
 
-            var enrichedProperties = logEvent.Properties
-                .Select(kvp => new LogEventProperty(kvp.Key, kvp.Value))
+            var enrichedProperties = logEvent
+                .Properties.Select(kvp => new LogEventProperty(kvp.Key, kvp.Value))
                 .ToList();
             enrichedProperties.Add(new LogEventProperty("JobId", new ScalarValue(context.JobId)));
-            enrichedProperties.Add(new LogEventProperty("JobName", new ScalarValue(context.JobName)));
+            enrichedProperties.Add(
+                new LogEventProperty("JobName", new ScalarValue(context.JobName))
+            );
 
             var enrichedEvent = new LogEvent(
                 logEvent.Timestamp,
@@ -86,7 +90,10 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
                 enrichedProperties
             );
 
-            var queue = _groupLogEvents.GetOrAdd(context.JobId, _ => new ConcurrentQueue<LogEvent>());
+            var queue = _groupLogEvents.GetOrAdd(
+                context.JobId,
+                _ => new ConcurrentQueue<LogEvent>()
+            );
             queue.Enqueue(enrichedEvent);
 
             if (queue.Count <= _batchSizeLimit)
@@ -150,11 +157,15 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
             return;
 
         var jobIds = _groupLogEvents.Keys.ToList();
-        var tasks = jobIds.Select(x=>FlushAsync(x, title));
+        var tasks = jobIds.Select(x => FlushAsync(x, title));
         await Task.WhenAll(tasks);
     }
 
-    protected virtual async Task EmitBatchAsync(IEnumerable<LogEvent> events, string jobId, string title = "")
+    protected virtual async Task EmitBatchAsync(
+        IEnumerable<LogEvent> events,
+        string jobId,
+        string title = ""
+    )
     {
         if (_disposed)
         {
