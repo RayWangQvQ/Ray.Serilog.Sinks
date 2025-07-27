@@ -71,30 +71,18 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
                 return;
             }
 
-            var context =
-                JobContextManager.Current ?? new JobExecutionContext("Unknown", "UnknownJob");
+            var groupKey = logEvent.Properties[Constants.GroupPropertyKey].ToString().Trim();
 
-            var enrichedProperties = logEvent
-                .Properties.Select(kvp => new LogEventProperty(kvp.Key, kvp.Value))
-                .ToList();
-            enrichedProperties.Add(new LogEventProperty("JobId", new ScalarValue(context.JobId)));
-            enrichedProperties.Add(
-                new LogEventProperty("JobName", new ScalarValue(context.JobName))
-            );
-
-            var enrichedEvent = new LogEvent(
-                logEvent.Timestamp,
-                logEvent.Level,
-                logEvent.Exception,
-                logEvent.MessageTemplate,
-                enrichedProperties
-            );
+            if (string.IsNullOrWhiteSpace(groupKey))
+            {
+                groupKey = "Unknown";
+            }
 
             var queue = _groupLogEvents.GetOrAdd(
-                context.JobId,
+                groupKey,
                 _ => new ConcurrentQueue<LogEvent>()
             );
-            queue.Enqueue(enrichedEvent);
+            queue.Enqueue(logEvent);
 
             if (queue.Count <= _batchSizeLimit)
                 return;
@@ -104,7 +92,7 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
                 queue.Count,
                 _batchSizeLimit
             );
-            Task.Run(async () => await FlushAsync(context.JobId).ConfigureAwait(false));
+            Task.Run(async () => await FlushAsync(groupKey).ConfigureAwait(false));
         }
         catch (Exception ex)
         {
