@@ -78,10 +78,7 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
                 groupKey = "Unknown";
             }
 
-            var queue = _groupLogEvents.GetOrAdd(
-                groupKey,
-                _ => new ConcurrentQueue<LogEvent>()
-            );
+            var queue = _groupLogEvents.GetOrAdd(groupKey, _ => new ConcurrentQueue<LogEvent>());
             queue.Enqueue(logEvent);
 
             if (queue.Count <= _batchSizeLimit)
