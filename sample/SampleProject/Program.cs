@@ -5,11 +5,10 @@ using Serilog.Context;
 
 Console.WriteLine("Hello, World!");
 
-var logger = new LoggerConfiguration()
+Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .WriteTo.TelegramBatched("YOUR_BOT_TOKEN", "YOUR_CHAT_ID")
     .CreateLogger();
-Log.Logger = logger;
 
 var groupId = "test-group";
 
