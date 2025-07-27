@@ -74,7 +74,7 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
             var groupKey = "Unknown";
             if (logEvent.Properties.TryGetValue(Constants.GroupPropertyKey, out var groupProperty))
             {
-                groupKey = groupProperty.ToString().Trim();
+                groupKey = groupProperty.ToString().Trim().Trim('\"');
                 if (string.IsNullOrWhiteSpace(groupKey))
                 {
                     groupKey = "Unknown";
