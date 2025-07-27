@@ -71,11 +71,14 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
                 return;
             }
 
-            var groupKey = logEvent.Properties[Constants.GroupPropertyKey].ToString().Trim();
-
-            if (string.IsNullOrWhiteSpace(groupKey))
+            var groupKey = "Unknown";
+            if (logEvent.Properties.TryGetValue(Constants.GroupPropertyKey, out var groupProperty))
             {
-                groupKey = "Unknown";
+                groupKey = groupProperty.ToString().Trim();
+                if (string.IsNullOrWhiteSpace(groupKey))
+                {
+                    groupKey = "Unknown";
+                }
             }
 
             var queue = _groupLogEvents.GetOrAdd(groupKey, _ => new ConcurrentQueue<LogEvent>());
