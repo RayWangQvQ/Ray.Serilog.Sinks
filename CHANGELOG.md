@@ -1,3 +1,5 @@
+## 0.1.0
+- Replace MIT License with GNU General Public License v3
 ## 0.0.11
 - Refactor BatchedSink
 ## 0.0.10
