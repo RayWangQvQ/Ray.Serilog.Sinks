@@ -10,6 +10,6 @@ public class JobExecutionContext
     {
         JobId = jobId ?? throw new ArgumentNullException(nameof(jobId));
         JobName = jobName ?? throw new ArgumentNullException(nameof(jobName));
-        StartTime = DateTime.Now;
+        StartTime = DateTime.UtcNow;
     }
 }
