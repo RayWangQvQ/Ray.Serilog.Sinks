@@ -11,10 +11,16 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 var groupId = "test-group";
-
 using (LogContext.PushProperty(Ray.Serilog.Sinks.Batched.Constants.GroupPropertyKey, groupId))
 {
     Log.Information("This is a test log message.");
 }
+await BatchSinkManager.FlushAsync(groupId);
 
+groupId = "test-group2";
+using (LogContext.PushProperty(Ray.Serilog.Sinks.Batched.Constants.GroupPropertyKey, groupId))
+{
+    Log.Information("This is a test log message 1.");
+    Log.Information("This is a test log message 2.");
+}
 await BatchSinkManager.FlushAsync(groupId);
