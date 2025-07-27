@@ -10,11 +10,13 @@ namespace Ray.Serilog.Sinks.Batched;
 
 public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
 {
+    private readonly ConcurrentDictionary<string, ConcurrentQueue<LogEvent>> _groupLogEvents =
+        new();
+
     private readonly int _batchSizeLimit;
     private readonly LogEventLevel _minimumLogEventLevel;
     private readonly bool _sendBatchesAsOneMessages;
     private readonly ITextFormatter _formatter;
-    private readonly ConcurrentQueue<LogEvent> _queue = new();
     private readonly object _syncRoot = new();
     private readonly SemaphoreSlim _flushSemaphore;
     private bool _disposed;
@@ -69,17 +71,28 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
                 return;
             }
 
-            _queue.Enqueue(logEvent);
+            var groupKey = "Unknown";
+            if (logEvent.Properties.TryGetValue(Constants.GroupPropertyKey, out var groupProperty))
+            {
+                groupKey = groupProperty.ToString().Trim().Trim('\"');
+                if (string.IsNullOrWhiteSpace(groupKey))
+                {
+                    groupKey = "Unknown";
+                }
+            }
 
-            if (_queue.Count <= _batchSizeLimit)
+            var queue = _groupLogEvents.GetOrAdd(groupKey, _ => new ConcurrentQueue<LogEvent>());
+            queue.Enqueue(logEvent);
+
+            if (queue.Count <= _batchSizeLimit)
                 return;
 
             SelfLog.WriteLine(
                 "BatchedSink queue size exceeded limit ({0} > {1}), flushing immediately.",
-                _queue.Count,
+                queue.Count,
                 _batchSizeLimit
             );
-            Task.Run(async () => await FlushAsync().ConfigureAwait(false));
+            Task.Run(async () => await FlushAsync(groupKey).ConfigureAwait(false));
         }
         catch (Exception ex)
         {
@@ -91,25 +104,34 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
         }
     }
 
-    public async Task FlushAsync(string title = "")
+    public async Task FlushAsync(string jobId, string title = "")
     {
         if (_disposed)
             return;
 
         await _flushSemaphore.WaitAsync();
+
         try
         {
-            var batch = new List<LogEvent>();
-
-            while (_queue.TryDequeue(out var logEvent))
+            if (_groupLogEvents.TryGetValue(jobId, out var queue))
             {
-                batch.Add(logEvent);
+                var batch = new List<LogEvent>();
+
+                while (queue.TryDequeue(out var logEvent) && batch.Count < _batchSizeLimit)
+                {
+                    batch.Add(logEvent);
+                }
+
+                if (batch.Count > 0)
+                {
+                    await EmitBatchAsync(batch, jobId, title);
+                }
+
+                if (queue.IsEmpty)
+                {
+                    _groupLogEvents.TryRemove(jobId, out _);
+                }
             }
-
-            if (batch.Count == 0)
-                return;
-
-            await EmitBatchAsync(batch, title);
         }
         finally
         {
@@ -117,7 +139,21 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
         }
     }
 
-    protected virtual async Task EmitBatchAsync(IEnumerable<LogEvent> events, string pushTitle = "")
+    public async Task FlushAllAsync(string title = "")
+    {
+        if (_disposed)
+            return;
+
+        var jobIds = _groupLogEvents.Keys.ToList();
+        var tasks = jobIds.Select(x => FlushAsync(x, title));
+        await Task.WhenAll(tasks);
+    }
+
+    protected virtual async Task EmitBatchAsync(
+        IEnumerable<LogEvent> events,
+        string jobId,
+        string title = ""
+    )
     {
         if (_disposed)
         {
@@ -135,7 +171,7 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
             sb.AppendLine(Environment.NewLine);
 
             var messageToSend = sb.ToString();
-            await PushMessageAsync(messageToSend, pushTitle);
+            await PushMessageAsync(messageToSend, title);
         }
         else
         {
@@ -254,7 +290,7 @@ public abstract class BatchedSink : ILogEventSink, IDisposable, IBatchSink
 
         try
         {
-            FlushAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+            FlushAllAsync().ConfigureAwait(false).GetAwaiter().GetResult();
         }
         catch (Exception ex)
         {
