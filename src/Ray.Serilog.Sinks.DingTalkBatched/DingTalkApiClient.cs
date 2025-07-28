@@ -48,9 +48,14 @@ public class DingTalkApiClient : PushService
         string title = ""
     )
     {
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            title = Constants.DefaultTitle;
+        }
+
         var json = new
         {
-            msgtype = DingMsgType.markdown.ToString(),
+            msgtype = nameof(DingMsgType.markdown),
             markdown = new { title = title, text = message },
         }.ToJsonStr();
         var content = new StringContent(json, Encoding.UTF8, "application/json");

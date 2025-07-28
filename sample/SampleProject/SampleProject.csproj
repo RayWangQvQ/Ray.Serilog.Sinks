@@ -9,7 +9,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\test\Ray.Serilog.Sinks.TelegramBatched.Tests\Ray.Serilog.Sinks.TelegramBatched.Tests.csproj" />
+      <ProjectReference Include="..\..\src\Ray.Serilog.Sinks.CoolPushBatched\Ray.Serilog.Sinks.CoolPushBatched.csproj" />
+      <ProjectReference Include="..\..\src\Ray.Serilog.Sinks.DingTalkBatched\Ray.Serilog.Sinks.DingTalkBatched.csproj" />
+      <ProjectReference Include="..\..\src\Ray.Serilog.Sinks.GotifyBatched\Ray.Serilog.Sinks.GotifyBatched.csproj" />
+      <ProjectReference Include="..\..\src\Ray.Serilog.Sinks.MicrosoftTeamsBatched\Ray.Serilog.Sinks.MicrosoftTeamsBatched.csproj" />
+      <ProjectReference Include="..\..\src\Ray.Serilog.Sinks.OtherApiBatched\Ray.Serilog.Sinks.OtherApiBatched.csproj" />
+      <ProjectReference Include="..\..\src\Ray.Serilog.Sinks.PushPlusBatched\Ray.Serilog.Sinks.PushPlusBatched.csproj" />
+      <ProjectReference Include="..\..\src\Ray.Serilog.Sinks.ServerChanBatched\Ray.Serilog.Sinks.ServerChanBatched.csproj" />
+      <ProjectReference Include="..\..\src\Ray.Serilog.Sinks.TelegramBatched\Ray.Serilog.Sinks.TelegramBatched.csproj" />
+      <ProjectReference Include="..\..\src\Ray.Serilog.Sinks.WorkWeiXinAppBatched\Ray.Serilog.Sinks.WorkWeiXinAppBatched.csproj" />
+      <ProjectReference Include="..\..\src\Ray.Serilog.Sinks.WorkWeiXinBatched\Ray.Serilog.Sinks.WorkWeiXinBatched.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+      <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
     </ItemGroup>
 
 </Project>
