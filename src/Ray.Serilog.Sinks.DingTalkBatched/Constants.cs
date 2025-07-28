@@ -2,5 +2,5 @@
 
 public static class Constants
 {
-    public const string DefaultTitle = "DingDing Notificatio";
+    public const string DefaultTitle = "DingDing Notification";
 }
