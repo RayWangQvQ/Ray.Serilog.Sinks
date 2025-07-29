@@ -15,7 +15,9 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Debug()
     // .WriteTo.TelegramBatched("YOUR_BOT_TOKEN", "YOUR_CHAT_ID")
     // .WriteTo.DingTalkBatched("https://oapi.dingtalk.com/robot/send?access_token=abcd")
-    .WriteTo.WorkWeiXinBatched("https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=b3c3b17c-61a8-4961-8f98-e822013b9446")
+    .WriteTo.WorkWeiXinBatched(
+        "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=b3c3b17c-61a8-4961-8f98-e822013b9446"
+    )
     .CreateLogger();
 
 var groupId = "test-group";

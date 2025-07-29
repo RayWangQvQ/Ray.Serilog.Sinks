@@ -48,19 +48,11 @@ public class WorkWeiXinApiClient : PushService
 
         if (_msgType == WorkWeiXinMsgType.markdown)
         {
-            json = new
-            {
-                msgtype = _msgType.ToString(),
-                markdown = new { content = message }
-            };
+            json = new { msgtype = _msgType.ToString(), markdown = new { content = message } };
         }
         else
         {
-            json = new
-            {
-                msgtype = _msgType.ToString(),
-                text = new { content = message }
-            };
+            json = new { msgtype = _msgType.ToString(), text = new { content = message } };
         }
 
         var content = new StringContent(json.ToJsonStr(), Encoding.UTF8, "application/json");
