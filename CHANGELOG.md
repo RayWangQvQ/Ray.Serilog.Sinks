@@ -1,3 +1,5 @@
+## 0.1.2
+- Feature: Work Weixin support with message type handling and default title
 ## 0.1.1
 - Fix: DingDing must has a title
 ## 0.1.0

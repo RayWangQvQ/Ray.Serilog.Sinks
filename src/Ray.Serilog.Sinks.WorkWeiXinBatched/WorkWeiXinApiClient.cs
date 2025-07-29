@@ -5,13 +5,13 @@ namespace Ray.Serilog.Sinks.WorkWeiXinBatched;
 
 public class WorkWeiXinApiClient : PushService
 {
-    //https://work.weixin.qq.com/api/doc/90000/90136/91770
-
+    private readonly WorkWeiXinMsgType _msgType;
     private readonly Uri _apiUrl;
     private readonly HttpClient _httpClient = new();
 
-    public WorkWeiXinApiClient(string webHookUrl)
+    public WorkWeiXinApiClient(string webHookUrl, WorkWeiXinMsgType msgType)
     {
+        _msgType = msgType;
         _apiUrl = new Uri(webHookUrl);
     }
 
@@ -27,6 +27,10 @@ public class WorkWeiXinApiClient : PushService
     protected override string BuildMsg(string message, string title = "")
     {
         //附加标题
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            title = Constants.DefaultTitle;
+        }
         var msg = $"## {title} {Environment.NewLine}{Environment.NewLine}{message}";
 
         if (!string.IsNullOrEmpty(NewLineStr))
@@ -40,23 +44,20 @@ public class WorkWeiXinApiClient : PushService
         string title = ""
     )
     {
-        var json = new
+        object json;
+
+        if (_msgType == WorkWeiXinMsgType.markdown)
         {
-            msgtype = WorkWeiXinMsgType.markdown.ToString(),
-            markdown = new { content = message },
-        }.ToJsonStr();
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
+            json = new { msgtype = _msgType.ToString(), markdown = new { content = message } };
+        }
+        else
+        {
+            json = new { msgtype = _msgType.ToString(), text = new { content = message } };
+        }
+
+        var content = new StringContent(json.ToJsonStr(), Encoding.UTF8, "application/json");
 
         var response = await _httpClient.PostAsync(_apiUrl, content);
         return response;
     }
-}
-
-public enum WorkWeiXinMsgType
-{
-    text,
-    markdown,
-    image,
-    news,
-    file,
 }

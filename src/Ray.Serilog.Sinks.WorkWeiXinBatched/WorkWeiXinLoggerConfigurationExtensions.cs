@@ -11,9 +11,10 @@ public static class WorkWeiXinLoggerConfigurationExtensions
     public static LoggerConfiguration WorkWeiXinBatched(
         this LoggerSinkConfiguration loggerSinkConfiguration,
         string webHookUrl,
+        WorkWeiXinMsgType msgType = WorkWeiXinMsgType.text,
         bool sendBatchesAsOneMessages = true,
         int batchSizeLimit = int.MaxValue,
-        string outputTemplate = Constants.DefaultOutputTemplate,
+        string outputTemplate = Ray.Serilog.Sinks.Batched.Constants.DefaultOutputTemplate,
         IFormatProvider? formatProvider = null,
         LogEventLevel restrictedToMinimumLevel = LogEventLevel.Verbose
     )
@@ -26,6 +27,7 @@ public static class WorkWeiXinLoggerConfigurationExtensions
         return loggerSinkConfiguration.Sink(
             new WorkWeiXinBatchedSink(
                 webHookUrl,
+                msgType,
                 sendBatchesAsOneMessages,
                 batchSizeLimit,
                 outputTemplate,

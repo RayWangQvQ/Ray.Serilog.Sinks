@@ -1,6 +1,7 @@
 ﻿using Ray.Serilog.Sinks.Batched;
 using Ray.Serilog.Sinks.DingTalkBatched;
 using Ray.Serilog.Sinks.TelegramBatched;
+using Ray.Serilog.Sinks.WorkWeiXinBatched;
 using Serilog;
 using Serilog.Context;
 using Serilog.Debugging;
@@ -14,6 +15,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Debug()
     .WriteTo.TelegramBatched("YOUR_BOT_TOKEN", "YOUR_CHAT_ID")
     .WriteTo.DingTalkBatched("https://oapi.dingtalk.com/robot/send?access_token=abcd")
+    .WriteTo.WorkWeiXinBatched("https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=abcd")
     .CreateLogger();
 
 var groupId = "test-group";
