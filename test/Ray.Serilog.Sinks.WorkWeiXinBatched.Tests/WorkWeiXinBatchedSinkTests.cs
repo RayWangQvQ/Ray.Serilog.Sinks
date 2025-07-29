@@ -15,6 +15,7 @@ public class WorkWeiXinBatchedSinkTests
         // Arrange & Act
         var sink = new WorkWeiXinBatchedSink(
             TestWebHookUrl,
+            WorkWeiXinMsgType.text,
             true,
             100,
             "{Message:lj}{NewLine}{Exception}",
