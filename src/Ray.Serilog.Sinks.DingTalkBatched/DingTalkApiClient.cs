@@ -32,17 +32,6 @@ public class DingTalkApiClient : PushService
     /// </summary>
     protected override string? NewLineStr => Environment.NewLine + Environment.NewLine;
 
-    protected override string BuildMsg(string message, string title = "")
-    {
-        //附加标题
-        var msg = $"## {title} {Environment.NewLine}{message}";
-
-        if (!string.IsNullOrEmpty(NewLineStr))
-            msg = msg.Replace(Environment.NewLine, NewLineStr);
-
-        return msg;
-    }
-
     protected override async Task<HttpResponseMessage> DoSendAsync(
         string message,
         string title = ""
@@ -55,7 +44,7 @@ public class DingTalkApiClient : PushService
 
         var json = new
         {
-            msgtype = nameof(DingMsgType.markdown),
+            msgtype = DingMsgType.markdown.ToString(),
             markdown = new { title = title, text = message },
         }.ToJsonStr();
         var content = new StringContent(json, Encoding.UTF8, "application/json");

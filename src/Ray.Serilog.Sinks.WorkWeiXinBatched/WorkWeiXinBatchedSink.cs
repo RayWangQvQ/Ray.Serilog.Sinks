@@ -6,9 +6,11 @@ namespace Ray.Serilog.Sinks.WorkWeiXinBatched;
 public class WorkWeiXinBatchedSink : BatchedSink
 {
     private readonly string _webHookUrl;
+    private readonly WorkWeiXinMsgType _msgType;
 
     public WorkWeiXinBatchedSink(
         string webHookUrl,
+        WorkWeiXinMsgType msgType,
         bool sendBatchesAsOneMessages,
         int batchSizeLimit,
         string outputTemplate,
@@ -24,6 +26,7 @@ public class WorkWeiXinBatchedSink : BatchedSink
         )
     {
         _webHookUrl = webHookUrl;
+        _msgType = msgType;
     }
 
     public override void Emit(LogEvent logEvent)
@@ -33,5 +36,5 @@ public class WorkWeiXinBatchedSink : BatchedSink
         base.Emit(logEvent);
     }
 
-    protected override PushService PushService => new WorkWeiXinApiClient(_webHookUrl);
+    protected override PushService PushService => new WorkWeiXinApiClient(_webHookUrl, _msgType);
 }
