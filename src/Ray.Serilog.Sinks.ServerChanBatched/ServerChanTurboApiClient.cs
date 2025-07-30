@@ -30,6 +30,11 @@ public class ServerChanTurboApiClient : PushService
         string title = ""
     )
     {
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            title = Constants.DefaultTitle;
+        }
+
         var dic = new Dictionary<string, string>
         {
             { "title", title }, //标题必填

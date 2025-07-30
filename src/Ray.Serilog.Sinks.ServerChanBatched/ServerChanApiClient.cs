@@ -38,6 +38,11 @@ public class ServerChanApiClient : PushService
         string title = ""
     )
     {
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            title = Constants.DefaultTitle;
+        }
+
         var dic = new Dictionary<string, string> { { "text", title }, { "desp", message } };
         var content = new FormUrlEncodedContent(dic);
         var response = await _httpClient.PostAsync(_apiUrl, content);
