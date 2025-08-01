@@ -1,3 +1,5 @@
+## 0.1.4
+- Fix: access_token of WorkWeiXinAppBatched
 ## 0.1.3
 - Feature: ServerChan support with default title
 ## 0.1.2
