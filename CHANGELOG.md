@@ -1,3 +1,5 @@
+## 0.1.3
+- Fix: access_token of WorkWeiXinAppBatched
 ## 0.1.2
 - Feature: Work Weixin support with message type handling and default title
 ## 0.1.1

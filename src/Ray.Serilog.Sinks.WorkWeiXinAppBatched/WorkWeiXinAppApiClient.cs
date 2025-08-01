@@ -5,10 +5,6 @@ namespace Ray.Serilog.Sinks.WorkWeiXinAppBatched;
 
 public class WorkWeiXinAppApiClient : PushService
 {
-    // https://developer.work.weixin.qq.com/tutorial/application-message
-    // https://developer.work.weixin.qq.com/document/34479
-    // https://github.com/JeffreySu/WeiXinMPSDK
-
     private readonly Uri _apiUrl;
     private readonly HttpClient _httpClient = new();
     private readonly string _corpId;
@@ -46,6 +42,10 @@ public class WorkWeiXinAppApiClient : PushService
         string title = ""
     )
     {
+        // access_token
+        var accessToken = await GetAccessTokenAsync(_corpId, _secret);
+        var apiUrlWithToken = new Uri($"{_apiUrl}?access_token={accessToken}");
+
         var json = new
         {
             touser = _toUser,
@@ -58,7 +58,7 @@ public class WorkWeiXinAppApiClient : PushService
 
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await _httpClient.PostAsync(_apiUrl, content);
+        var response = await _httpClient.PostAsync(apiUrlWithToken, content);
         return response;
     }
 
