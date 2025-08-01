@@ -16,7 +16,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Debug()
     .WriteTo.TelegramBatched("YOUR_BOT_TOKEN", "YOUR_CHAT_ID")
     .WriteTo.DingTalkBatched("https://oapi.dingtalk.com/robot/send?access_token=abcd")
-    .WriteTo.WorkWeiXinAppBatched("corpid","agentid", "secret")
+    .WriteTo.WorkWeiXinAppBatched("corpid", "agentid", "secret")
     .WriteTo.WorkWeiXinBatched("https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=abcd")
     .CreateLogger();
 
