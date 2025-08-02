@@ -15,6 +15,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+
+	  <PackageReference Include="SixLabors.ImageSharp" Version="2.1.10" />
+
+	  <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.0" />
 	  <ProjectReference Include="..\Ray.Serilog.Sinks.Batched\Ray.Serilog.Sinks.Batched.csproj" />
 	</ItemGroup>
 
