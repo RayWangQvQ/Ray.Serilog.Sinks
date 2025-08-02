@@ -16,7 +16,7 @@ public static class PushPlusLoggerConfigurationExtensions
         string webhook = "",
         bool sendBatchesAsOneMessages = true,
         int batchSizeLimit = int.MaxValue,
-        string outputTemplate = Constants.DefaultOutputTemplate,
+        string outputTemplate = Ray.Serilog.Sinks.Batched.Constants.DefaultOutputTemplate,
         IFormatProvider? formatProvider = null,
         LogEventLevel restrictedToMinimumLevel = LogEventLevel.Verbose
     )
