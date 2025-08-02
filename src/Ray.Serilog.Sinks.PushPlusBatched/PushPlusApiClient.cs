@@ -56,6 +56,10 @@ public class PushPlusApiClient : PushService
         string title = ""
     )
     {
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            title = Constants.DefaultTitle;
+        }
         var json = new
         {
             token = _token,

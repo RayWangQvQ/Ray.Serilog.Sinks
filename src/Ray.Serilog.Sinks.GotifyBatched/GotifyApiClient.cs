@@ -27,6 +27,10 @@ public class GotifyApiClient : PushService
         string title = ""
     )
     {
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            title = Constants.DefaultTitle;
+        }
         var json = new
         {
             title = title,

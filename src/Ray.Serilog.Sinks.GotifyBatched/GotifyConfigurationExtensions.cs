@@ -14,7 +14,7 @@ public static class GotifyConfigurationExtensions
         string token,
         bool sendBatchesAsOneMessages = true,
         int batchSizeLimit = int.MaxValue,
-        string outputTemplate = Constants.DefaultOutputTemplate,
+        string outputTemplate = Ray.Serilog.Sinks.Batched.Constants.DefaultOutputTemplate,
         IFormatProvider? formatProvider = null,
         LogEventLevel restrictedToMinimumLevel = LogEventLevel.Verbose
     )
