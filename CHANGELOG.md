@@ -1,3 +1,5 @@
+## 0.1.6
+- Upgrade Serilog 4.3.0 -> 4.4.0
 ## 0.1.5
 - Feature: Add default tile for sinks
 ## 0.1.4
