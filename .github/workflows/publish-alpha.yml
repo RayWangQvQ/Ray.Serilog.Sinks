@@ -1,0 +1,92 @@
+name: Publish alpha
+
+# Alpha channel: every merge to main produces prerelease NuGet packages pushed to
+# nuget.org for all sinks. Version is derived from git tag history; no tag or
+# Release is created.
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.github/workflows/**'
+      - '.editorconfig'
+
+permissions:
+  contents: read
+
+# Serialize: alpha N = commits since last stable tag; concurrent runs would clash.
+concurrency:
+  group: alpha-main
+  cancel-in-progress: false
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  DOTNET_LEGACY_RUNTIME_VERSION: '8.0.x'
+  NUGET_SOURCE: 'https://api.nuget.org/v3/index.json'
+
+jobs:
+  determine-version:
+    name: Determine alpha version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      # fetch-depth: 0 to see full tag history (alpha N derives from it)
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - id: version
+        run: |
+          version=$(bash ./scripts/version-next.sh alpha)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "alpha version: $version"
+
+  publish:
+    name: Build, test and push alpha packages
+    needs: determine-version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            ${{ env.DOTNET_VERSION }}
+            ${{ env.DOTNET_LEGACY_RUNTIME_VERSION }}
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore -p:Version=${{ needs.determine-version.outputs.version }}
+
+      - name: Test
+        run: dotnet test --configuration Release --no-build
+
+      - name: Pack all sinks
+        run: |
+          mkdir -p ./bin/alpha-nupkgs
+          rm -rf ./bin/alpha-nupkgs/*
+          for proj in src/*/*.csproj; do
+            echo "Packing $proj..."
+            dotnet pack "$proj" \
+              --configuration Release --no-build \
+              --output ./bin/alpha-nupkgs \
+              -p:Version=${{ needs.determine-version.outputs.version }}
+          done
+          ls -la ./bin/alpha-nupkgs/
+
+      - name: Push to NuGet
+        run: |
+          if [ -z "${{ secrets.NUGET_API_KEY }}" ]; then
+            echo "::warning::NUGET_API_KEY not set, skipping push"
+          else
+            dotnet nuget push ./bin/alpha-nupkgs/*.nupkg \
+              --api-key ${{ secrets.NUGET_API_KEY }} \
+              --source ${{ env.NUGET_SOURCE }} \
+              --skip-duplicate
+          fi
