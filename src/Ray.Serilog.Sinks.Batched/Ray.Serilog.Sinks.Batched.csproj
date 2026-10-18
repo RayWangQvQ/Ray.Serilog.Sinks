@@ -3,7 +3,7 @@
 	<Import Project="..\..\common.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
+		<TargetFrameworks>net10.0;net8.0</TargetFrameworks>
 		<Description>Ray.Serilog.Sinks.Batched</Description>
 		<AssemblyName>Ray.Serilog.Sinks.Batched</AssemblyName>
 		<PackageId>Ray.Serilog.Sinks.Batched</PackageId>

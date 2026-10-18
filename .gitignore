@@ -351,3 +351,4 @@ MigrationBackup/
 
 # coverage report files
 CoverageReport
+.workbuddy/
