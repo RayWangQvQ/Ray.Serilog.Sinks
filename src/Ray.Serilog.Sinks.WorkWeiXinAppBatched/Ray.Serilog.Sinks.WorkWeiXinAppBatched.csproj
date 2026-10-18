@@ -3,7 +3,7 @@
 	<Import Project="..\..\common.props" />
 
 	<PropertyGroup>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFrameworks>net10.0;net8.0</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<AssemblyName>Ray.Serilog.Sinks.WorkWeiXinAppBatched</AssemblyName>
 		<PackageId>Ray.Serilog.Sinks.WorkWeiXinAppBatched</PackageId>
